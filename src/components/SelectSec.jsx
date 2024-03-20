@@ -169,7 +169,7 @@ const SelectSec = () => {
     const word = data.word ? +data.word : 0;
     const page = data.page ? +data.page : 1;
 
-    if (mean > MAX || word > MAX || page > PAGE_MAX) {
+    if (mean > MAX || word > MAX || page > PAGE_MAX || mean + word > MAX) {
       setError("입력을 확인해주세요.");
       return;
     }
@@ -223,8 +223,20 @@ const SelectSec = () => {
         state,
         currentValue + 1 <= PAGE_MAX ? currentValue + 1 : PAGE_MAX
       );
-    } else {
-      setValue(state, currentValue + 1 <= MAX ? currentValue + 1 : MAX);
+    } else if (state === "mean") {
+      setValue(
+        "mean",
+        currentValue + 1 + Number(watch("word")) <= MAX
+          ? currentValue + 1
+          : currentValue
+      );
+    } else if (state === "word") {
+      setValue(
+        "word",
+        currentValue + 1 + Number(watch("mean")) <= MAX
+          ? currentValue + 1
+          : currentValue
+      );
     }
   };
 

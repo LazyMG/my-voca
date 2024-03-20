@@ -130,6 +130,8 @@ const ListSec = () => {
     }
     if (currentSection === "LIST") {
       setCurrentPage(1);
+    } else {
+      return;
     }
 
     let totalMeanList = [];
@@ -217,7 +219,6 @@ const ListSec = () => {
                             category={"mean"}
                             mean={item.meaning}
                             word={item.word}
-                            day={item.day}
                           />
                         );
                       }
@@ -233,7 +234,6 @@ const ListSec = () => {
                             category={"word"}
                             mean={item.meaning}
                             word={item.word}
-                            day={item.day}
                           />
                         );
                       }

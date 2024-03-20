@@ -61,7 +61,7 @@ export function getRandomWords(arr, num) {
     }
   }
 
-  result.sort((a, b) => a.day - b.day);
+  //result.sort((a, b) => a.day - b.day);
   return result;
 }
 
