@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const SubmitInput = styled.input`
   -webkit-appearance: none;
@@ -42,6 +43,11 @@ const Button = ({ text, onClick }) => {
       value={text}
     />
   );
+};
+
+Button.propTypes = {
+  text: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default Button;

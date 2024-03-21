@@ -1,11 +1,5 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  categoryState,
-  dbWordList,
-  meanListState,
-  sectionState,
-  wordListState,
-} from "../atoms";
+import { categoryState, dbWordList, sectionState } from "../atoms";
 import styled from "styled-components";
 import Button from "./Button";
 import WordHeader from "./Word/WordHeader";
@@ -29,6 +23,7 @@ const Title = styled.h1`
   border: #6f7071 solid 2px;
   width: fit-content;
   padding: 5px;
+  margin-top: 8px;
   font-weight: bold;
   color: #f5f6fa;
   background-color: #e1b12c;
@@ -50,7 +45,7 @@ const Content = styled.div`
   gap: 10px;
   align-items: center;
   /* background-color: red; */
-  padding-top: 20px;
+  padding-top: 10px;
   /* padding-left: 15px; */
 `;
 
@@ -118,8 +113,8 @@ const ListSec = () => {
   const category = useRecoilValue(categoryState);
   const [currentPage, setCurrentPage] = useState(1);
   const dbList = useRecoilValue(dbWordList);
-  const [meanList, setMeanList] = useRecoilState(meanListState);
-  const [wordList, setWordList] = useRecoilState(wordListState);
+  const [meanList, setMeanList] = useState([]);
+  const [wordList, setWordList] = useState([]);
   let rowCount = 1;
 
   const componentRef = useRef();
@@ -128,30 +123,57 @@ const ListSec = () => {
     if (dbList.length === 0) {
       return;
     }
+
     if (currentSection === "LIST") {
       setCurrentPage(1);
     } else {
       return;
     }
+    console.log(category.mean, category.word);
 
-    let totalMeanList = [];
+    let totalList = [];
+
     for (let page = 0; page < category.page; page++) {
-      const meanObject = {
+      const tempObject = {
         id: page,
-        list: getRandomWords(dbList, category.mean),
+        list: getRandomWords(dbList, category.mean + category.word),
       };
-      totalMeanList.push(meanObject);
+      totalList.push(tempObject);
     }
-    setMeanList(totalMeanList);
-    let totalWordList = [];
-    for (let page = 0; page < category.page; page++) {
-      const wordObject = {
-        id: page,
-        list: getRandomWords(dbList, category.word),
-      };
-      totalWordList.push(wordObject);
-    }
-    setWordList(totalWordList);
+
+    const meanTempList = [];
+    const wordTempList = [];
+
+    totalList.forEach((item) => {
+      // id를 그대로 가져오고, list를 분할하여 새로운 배열에 추가
+      meanTempList.push({
+        id: item.id,
+        list: item.list.slice(0, category.mean),
+      }); // 첫 6개 요소
+      wordTempList.push({ id: item.id, list: item.list.slice(category.mean) }); // 나머지 요소
+    });
+
+    setMeanList(meanTempList);
+    setWordList(wordTempList);
+
+    // let totalMeanList = [];
+    // for (let page = 0; page < category.page; page++) {
+    //   const meanObject = {
+    //     id: page,
+    //     list: getRandomWords(dbList, category.mean),
+    //   };
+    //   totalMeanList.push(meanObject);
+    // }
+    // setMeanList(totalMeanList);
+    // let totalWordList = [];
+    // for (let page = 0; page < category.page; page++) {
+    //   const wordObject = {
+    //     id: page,
+    //     list: getRandomWords(dbList, category.word),
+    //   };
+    //   totalWordList.push(wordObject);
+    // }
+    // setWordList(totalWordList);
   }, [dbList, category, setMeanList, setWordList, currentSection]);
 
   const pageInc = () => {
@@ -253,14 +275,16 @@ const ListSec = () => {
           </ButtonDiv>
         </Content>
       </Wrapper>
-      <PrintDiv>
-        <WordPage
-          meanList={meanList}
-          wordList={wordList}
-          currentPage={currentPage}
-          forPrintRef={componentRef}
-        />
-      </PrintDiv>
+      {meanList.length !== 0 && wordList.length !== 0 ? (
+        <PrintDiv>
+          <WordPage
+            meanList={meanList}
+            wordList={wordList}
+            currentPage={category.page}
+            forPrintRef={componentRef}
+          />
+        </PrintDiv>
+      ) : null}
     </>
   );
 };

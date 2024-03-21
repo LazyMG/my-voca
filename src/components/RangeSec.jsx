@@ -25,6 +25,7 @@ const Title = styled.h1`
   border: #6f7071 solid 2px;
   width: fit-content;
   padding: 5px;
+  margin-top: 8px;
   font-weight: bold;
   color: #f5f6fa;
   background-color: #e1b12c;
@@ -44,6 +45,7 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   padding-top: 70px;
+  /* background-color: blue; */
 `;
 
 const Form = styled.form`
