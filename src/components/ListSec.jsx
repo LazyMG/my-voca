@@ -115,6 +115,7 @@ const ListSec = () => {
   const dbList = useRecoilValue(dbWordList);
   const [meanList, setMeanList] = useState([]);
   const [wordList, setWordList] = useState([]);
+
   let rowCount = 1;
 
   const componentRef = useRef();
@@ -129,7 +130,6 @@ const ListSec = () => {
     } else {
       return;
     }
-    console.log(category.mean, category.word);
 
     let totalList = [];
 
@@ -155,26 +155,11 @@ const ListSec = () => {
 
     setMeanList(meanTempList);
     setWordList(wordTempList);
-
-    // let totalMeanList = [];
-    // for (let page = 0; page < category.page; page++) {
-    //   const meanObject = {
-    //     id: page,
-    //     list: getRandomWords(dbList, category.mean),
-    //   };
-    //   totalMeanList.push(meanObject);
-    // }
-    // setMeanList(totalMeanList);
-    // let totalWordList = [];
-    // for (let page = 0; page < category.page; page++) {
-    //   const wordObject = {
-    //     id: page,
-    //     list: getRandomWords(dbList, category.word),
-    //   };
-    //   totalWordList.push(wordObject);
-    // }
-    // setWordList(totalWordList);
   }, [dbList, category, setMeanList, setWordList, currentSection]);
+
+  useEffect(() => {
+    console.log("list meanList", meanList);
+  }, [meanList]);
 
   const pageInc = () => {
     if (currentPage + 1 > category.page) return;
@@ -213,7 +198,7 @@ const ListSec = () => {
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: "파일명",
+    documentTitle: "Voca Test",
   });
 
   return (
@@ -230,9 +215,8 @@ const ListSec = () => {
             <WordList>
               <WordHeader />
               <WordRows>
-                {meanList.length === 0
-                  ? null
-                  : getCurrentList(meanList, currentPage - 1).map(
+                {meanList.length !== 0 && currentSection === "LIST"
+                  ? getCurrentList(meanList, currentPage - 1).map(
                       (item, index) => {
                         return (
                           <WordRow
@@ -244,10 +228,10 @@ const ListSec = () => {
                           />
                         );
                       }
-                    )}
-                {wordList.length === 0
-                  ? null
-                  : getCurrentList(wordList, currentPage - 1).map(
+                    )
+                  : null}
+                {wordList.length !== 0 && currentSection === "LIST"
+                  ? getCurrentList(wordList, currentPage - 1).map(
                       (item, index) => {
                         return (
                           <WordRow
@@ -259,7 +243,8 @@ const ListSec = () => {
                           />
                         );
                       }
-                    )}
+                    )
+                  : null}
               </WordRows>
             </WordList>
             <WordSelect>
@@ -275,7 +260,7 @@ const ListSec = () => {
           </ButtonDiv>
         </Content>
       </Wrapper>
-      {meanList.length !== 0 && wordList.length !== 0 ? (
+      {currentSection === "LIST" ? (
         <PrintDiv>
           <WordPage
             meanList={meanList}

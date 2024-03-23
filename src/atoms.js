@@ -28,3 +28,11 @@ export const dbWordList = atom({
   key: "dbWord",
   default: [],
 });
+export const meanListState = atom({
+  key: "meanList",
+  default: [],
+});
+export const wordListState = atom({
+  key: "wordList",
+  default: [],
+});
