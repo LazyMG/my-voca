@@ -44,13 +44,10 @@ const Content = styled.div`
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  /* background-color: red; */
   padding-top: 10px;
-  /* padding-left: 15px; */
 `;
 
 const WordContainer = styled.div`
-  /* background-color: blue; */
   width: 100%;
   height: 90%;
   display: flex;
@@ -58,14 +55,26 @@ const WordContainer = styled.div`
   align-items: center;
   gap: 20px;
   padding: 30px 5px;
-  padding-top: 20px;
+  padding-top: 15px;
   box-sizing: border-box;
 `;
 
 const WordOption = styled.div``;
 
+const WordSelect = styled.select`
+  padding: 3px 10px;
+  font-size: 15px;
+  font-family: inherit;
+  border-radius: 10px;
+  outline: none;
+  color: black;
+  cursor: pointer;
+  /* &:hover {
+    opacity: 0.8;
+  } */
+`;
+
 const WordList = styled.div`
-  /* background-color: green; */
   width: 100%;
   height: 90%;
   border: 1px solid black;
@@ -88,9 +97,13 @@ const WordRows = styled.div`
   }
 `;
 
-const WordSelect = styled.div`
+const WordSelectDiv = styled.div`
   display: flex;
   gap: 5px;
+  div {
+    font-weight: 600;
+    font-size: 20px;
+  }
 `;
 
 const WordSelectButton = styled.div`
@@ -208,9 +221,9 @@ const ListSec = () => {
         <Content>
           <WordContainer>
             <WordOption>
-              <select value={currentPage} onChange={handleSelectChange}>
+              <WordSelect value={currentPage} onChange={handleSelectChange}>
                 {renderOptions(category.page)}
-              </select>
+              </WordSelect>
             </WordOption>
             <WordList>
               <WordHeader />
@@ -247,16 +260,16 @@ const ListSec = () => {
                   : null}
               </WordRows>
             </WordList>
-            <WordSelect>
+            <WordSelectDiv>
               <WordSelectButton onClick={pageDec}>{"<"}</WordSelectButton>
               <div>{currentPage}</div>
               <WordSelectButton onClick={pageInc}>{">"}</WordSelectButton>
-            </WordSelect>
+            </WordSelectDiv>
           </WordContainer>
 
           <ButtonDiv>
             <Button onClick={prevSection} text={"이전"} />
-            <Button onClick={printPage} text={"출력"} />
+            <Button onClick={printPage} text={"출력"} isPrint={true} />
           </ButtonDiv>
         </Content>
       </Wrapper>

@@ -23,7 +23,7 @@ const SubmitInput = styled.input`
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
-  background-color: #2f3640;
+  background-color: ${(props) => (props.isPrint ? "#FC427B" : "#2f3640")};
   color: #fff;
 
   cursor: pointer;
@@ -31,16 +31,17 @@ const SubmitInput = styled.input`
 
   &:hover {
     outline: 0;
-    background: #576175;
+    background: ${(props) => (props.isPrint ? "#FD7272" : "#576175")};
   }
 `;
 
-const Button = ({ text, onClick }) => {
+const Button = ({ text, onClick, isPrint }) => {
   return (
     <SubmitInput
       onClick={onClick ? onClick : null}
       type="submit"
       value={text}
+      isPrint={isPrint}
     />
   );
 };
@@ -48,6 +49,7 @@ const Button = ({ text, onClick }) => {
 Button.propTypes = {
   text: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  isPrint: PropTypes.bool,
 };
 
 export default Button;
