@@ -18,7 +18,16 @@ const PageContainer = styled.div`
   gap: 50px;
   box-sizing: border-box;
   page-break-after: always;
-  /* background-color: blue; */
+`;
+
+const PageAnswerContainer = styled.div`
+  width: 100%;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  box-sizing: border-box;
+  page-break-after: always;
 `;
 
 const PageHeader = styled.div`
@@ -47,8 +56,6 @@ const PageProblem = styled.div`
 const ProblemDiv = styled.div`
   width: 55%;
   display: flex;
-  /* gap: 10px; */
-  //background-color: blue;
   justify-content: space-between;
   align-items: center;
 `;
@@ -78,58 +85,108 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
   return (
     <Wrapper ref={forPrintRef}>
       {Array.from({ length: category.page }).map((_, page) => (
-        <PageContainer key={page}>
-          <PageHeader>
-            <PageTitle>단어 테스트 Day</PageTitle>
-            <PageName>
-              이름 :
-              &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
-            </PageName>
-          </PageHeader>
-          <PageProblem>
-            {category.mean !== 0
-              ? getCurrentList(meanList, page)?.map((item, index) => {
-                  return (
-                    <ProblemDiv key={index}>
-                      <ProblemLeft>
-                        <ProblemNum>
-                          {count + 1 > category.mean + category.word
-                            ? (count = 1)
-                            : ++count}
-                          .
-                        </ProblemNum>
-                        <Problem>{item.word}</Problem>
-                      </ProblemLeft>
-                      <ProblemLine>
-                        &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
-                      </ProblemLine>
-                    </ProblemDiv>
-                  );
-                })
-              : null}
+        <>
+          <PageContainer key={page}>
+            <PageHeader>
+              <PageTitle>단어 테스트 Day</PageTitle>
+              <PageName>
+                이름 :
+                &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
+              </PageName>
+            </PageHeader>
+            <PageProblem>
+              {category.mean !== 0
+                ? getCurrentList(meanList, page)?.map((item, index) => {
+                    return (
+                      <ProblemDiv key={index}>
+                        <ProblemLeft>
+                          <ProblemNum>
+                            {count + 1 > category.mean + category.word
+                              ? (count = 1)
+                              : ++count}
+                            .
+                          </ProblemNum>
+                          <Problem>{item.word}</Problem>
+                        </ProblemLeft>
+                        <ProblemLine>
+                          &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
+                        </ProblemLine>
+                      </ProblemDiv>
+                    );
+                  })
+                : null}
 
-            {category.word !== 0
-              ? getCurrentList(wordList, page).map((item, index) => {
-                  return (
-                    <ProblemDiv key={index}>
-                      <ProblemLeft>
-                        <ProblemNum>
-                          {count + 1 > category.mean + category.word
-                            ? (count = 1)
-                            : ++count}
-                          .
-                        </ProblemNum>
-                        <Problem>{item.meaning}</Problem>
-                      </ProblemLeft>
-                      <ProblemLine>
-                        &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
-                      </ProblemLine>
-                    </ProblemDiv>
-                  );
-                })
-              : null}
-          </PageProblem>
-        </PageContainer>
+              {category.word !== 0
+                ? getCurrentList(wordList, page).map((item, index) => {
+                    return (
+                      <ProblemDiv key={index}>
+                        <ProblemLeft>
+                          <ProblemNum>
+                            {count + 1 > category.mean + category.word
+                              ? (count = 1)
+                              : ++count}
+                            .
+                          </ProblemNum>
+                          <Problem>{item.meaning}</Problem>
+                        </ProblemLeft>
+                        <ProblemLine>
+                          &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
+                        </ProblemLine>
+                      </ProblemDiv>
+                    );
+                  })
+                : null}
+            </PageProblem>
+          </PageContainer>
+          <PageAnswerContainer key={page}>
+            <PageHeader>
+              <PageTitle>단어 테스트 답지</PageTitle>
+              <PageName>
+                이름 :
+                &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
+              </PageName>
+            </PageHeader>
+            <PageProblem>
+              {category.mean !== 0
+                ? getCurrentList(meanList, page)?.map((item, index) => {
+                    return (
+                      <ProblemDiv key={index}>
+                        <ProblemLeft>
+                          <ProblemNum>
+                            {count + 1 > category.mean + category.word
+                              ? (count = 1)
+                              : ++count}
+                            .
+                          </ProblemNum>
+                          <Problem>{item.meaning}</Problem>
+                        </ProblemLeft>
+                        <ProblemLine></ProblemLine>
+                      </ProblemDiv>
+                    );
+                  })
+                : null}
+
+              {category.word !== 0
+                ? getCurrentList(wordList, page).map((item, index) => {
+                    return (
+                      <ProblemDiv key={index}>
+                        <ProblemLeft>
+                          <ProblemNum>
+                            {count + 1 > category.mean + category.word
+                              ? (count = 1)
+                              : ++count}
+                            .
+                          </ProblemNum>
+                          <Problem>{item.word}</Problem>
+                        </ProblemLeft>
+                        <ProblemLine></ProblemLine>
+                      </ProblemDiv>
+                    );
+                  })
+                : null}
+            </PageProblem>
+          </PageAnswerContainer>
+        </>
       ))}
     </Wrapper>
   );
