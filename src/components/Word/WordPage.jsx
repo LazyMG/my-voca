@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { categoryState, numberState } from "../../atoms";
-import { useEffect, useState } from "react";
+import { categoryState } from "../../atoms";
 import { getCurrentList } from "../../utils/randomSelect";
 
 const Wrapper = styled.div`
@@ -38,6 +37,8 @@ const PageHeader = styled.div`
 
 const PageTitle = styled.h1`
   font-size: 30px;
+  display: flex;
+  justify-content: center;
 `;
 
 const PageName = styled.div`
@@ -77,7 +78,6 @@ const ProblemLine = styled.span`
 `;
 
 const WordPage = ({ meanList, wordList, forPrintRef }) => {
-  const number = useRecoilValue(numberState);
   const category = useRecoilValue(categoryState);
 
   let count = 0;
@@ -85,10 +85,10 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
   return (
     <Wrapper ref={forPrintRef}>
       {Array.from({ length: category.page }).map((_, page) => (
-        <>
-          <PageContainer key={page}>
+        <div key={page}>
+          <PageContainer key={page + "problem"}>
             <PageHeader>
-              <PageTitle>단어 테스트 Day</PageTitle>
+              <PageTitle>단어 테스트 {page + 1}</PageTitle>
               <PageName>
                 이름 :
                 &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
@@ -98,7 +98,7 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
               {category.mean !== 0
                 ? getCurrentList(meanList, page)?.map((item, index) => {
                     return (
-                      <ProblemDiv key={index}>
+                      <ProblemDiv key={index + "meaning"}>
                         <ProblemLeft>
                           <ProblemNum>
                             {count + 1 > category.mean + category.word
@@ -119,7 +119,7 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
               {category.word !== 0
                 ? getCurrentList(wordList, page).map((item, index) => {
                     return (
-                      <ProblemDiv key={index}>
+                      <ProblemDiv key={index + "word"}>
                         <ProblemLeft>
                           <ProblemNum>
                             {count + 1 > category.mean + category.word
@@ -138,19 +138,15 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
                 : null}
             </PageProblem>
           </PageContainer>
-          <PageAnswerContainer key={page}>
+          <PageAnswerContainer key={page + "answer"}>
             <PageHeader>
-              <PageTitle>단어 테스트 답지</PageTitle>
-              <PageName>
-                이름 :
-                &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
-              </PageName>
+              <PageTitle>단어 테스트 {page + 1} 답지</PageTitle>
             </PageHeader>
             <PageProblem>
               {category.mean !== 0
                 ? getCurrentList(meanList, page)?.map((item, index) => {
                     return (
-                      <ProblemDiv key={index}>
+                      <ProblemDiv key={index + "meaningAnswer"}>
                         <ProblemLeft>
                           <ProblemNum>
                             {count + 1 > category.mean + category.word
@@ -169,7 +165,7 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
               {category.word !== 0
                 ? getCurrentList(wordList, page).map((item, index) => {
                     return (
-                      <ProblemDiv key={index}>
+                      <ProblemDiv key={index + "wordAnswer"}>
                         <ProblemLeft>
                           <ProblemNum>
                             {count + 1 > category.mean + category.word
@@ -186,7 +182,7 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
                 : null}
             </PageProblem>
           </PageAnswerContainer>
-        </>
+        </div>
       ))}
     </Wrapper>
   );

@@ -31,7 +31,7 @@ const SubmitInput = styled.input`
 
   &:hover {
     outline: 0;
-    background: ${(props) => (props.isPrint ? "#FD7272" : "#576175")};
+    background: ${(props) => (props.$isPrint ? "#FD7272" : "#576175")};
   }
 `;
 
@@ -41,7 +41,7 @@ const Button = ({ text, onClick, isPrint }) => {
       onClick={onClick ? onClick : null}
       type="submit"
       value={text}
-      isPrint={isPrint}
+      $isPrint={isPrint}
     />
   );
 };

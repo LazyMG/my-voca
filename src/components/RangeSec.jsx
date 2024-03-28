@@ -45,7 +45,6 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   padding-top: 70px;
-  /* background-color: blue; */
 `;
 
 const Form = styled.form`
@@ -201,7 +200,6 @@ const RangeSec = () => {
           return;
         }
         resultNum = generateRangeArray(fromNum, toNum);
-        console.log(resultNum);
         setNumber(resultNum);
         setCurrentSection("SELECT");
       } else {
@@ -211,7 +209,6 @@ const RangeSec = () => {
     } else {
       if (data.custom) {
         resultNum = parseInputString(data.custom);
-        console.log(resultNum);
         if (resultNum.includes(-1) || resultNum.length === 0) {
           setError("custom", { message: "입력 형식을 확인해주세요." });
           return;
@@ -221,7 +218,6 @@ const RangeSec = () => {
           setError("custom", { message: "입력된 범위를 확인해주세요." });
           return;
         }
-        console.log(resultNum);
         setNumber(resultNum);
         setCurrentSection("SELECT");
       } else {

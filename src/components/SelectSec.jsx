@@ -43,7 +43,6 @@ const Content = styled.div`
   justify-content: center;
   box-sizing: border-box;
   padding-top: 130px;
-  //background-color: blue;
   padding-left: 40px;
 `;
 
@@ -99,7 +98,6 @@ const CircleButton = styled.div`
 
   &:hover {
     outline: 0;
-    //background: #4cd137;
     background-color: ${(props) =>
       props.$calc === "minus" ? "#e84118" : "#44bd32"};
   }
@@ -128,7 +126,7 @@ const TextBox = styled.input`
       props.$autobg === "SELECT"
         ? "0 0 0 30px #f5f6fa inset"
         : "0 0 0 30px #dcdde1 inset"};
-    /* -webkit-box-shadow: 0 0 0 30px #fff inset; */
+
     -webkit-text-fill-color: #000;
   }
   &:-webkit-autofill,

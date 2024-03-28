@@ -170,10 +170,6 @@ const ListSec = () => {
     setWordList(wordTempList);
   }, [dbList, category, setMeanList, setWordList, currentSection]);
 
-  useEffect(() => {
-    console.log("list meanList", meanList);
-  }, [meanList]);
-
   const pageInc = () => {
     if (currentPage + 1 > category.page) return;
     setCurrentPage(currentPage + 1);
@@ -234,7 +230,7 @@ const ListSec = () => {
                         return (
                           <WordRow
                             count={rowCount++}
-                            key={index}
+                            key={index + "meaning"}
                             category={"mean"}
                             mean={item.meaning}
                             word={item.word}
@@ -249,7 +245,7 @@ const ListSec = () => {
                         return (
                           <WordRow
                             count={rowCount++}
-                            key={index}
+                            key={index + "word"}
                             category={"word"}
                             mean={item.meaning}
                             word={item.word}
