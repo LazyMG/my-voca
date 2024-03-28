@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import { categoryState, dbWordList, sectionState } from "../atoms";
 import styled from "styled-components";
-import Button from "./Button";
+import Button from "./elements/Button";
 import WordHeader from "./Word/WordHeader";
 import WordRow from "./Word/WordRow";
 import { useEffect, useRef, useState } from "react";

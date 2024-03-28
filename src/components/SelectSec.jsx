@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { categoryState, dbWordList, numberState, sectionState } from "../atoms";
-import Button from "./Button";
+import Button from "./elements/Button";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { generateTotalList } from "../utils/randomSelect";

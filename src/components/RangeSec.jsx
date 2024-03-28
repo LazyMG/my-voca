@@ -8,7 +8,7 @@ import {
   parseInputString,
   processArray,
 } from "../utils/parsing";
-import Button from "./Button";
+import Button from "./elements/Button";
 import { wordList } from "../voca/voca";
 
 const Wrapper = styled.div`
