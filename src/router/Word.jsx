@@ -1,7 +1,7 @@
-import React from "react";
+import Section from "../components/Section";
 
 const Word = () => {
-  return <div>Word</div>;
+  return <Section />;
 };
 
 export default Word;

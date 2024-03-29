@@ -4,6 +4,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  box-sizing: border-box;
 }
 
 input[type="number"]::-webkit-inner-spin-button {

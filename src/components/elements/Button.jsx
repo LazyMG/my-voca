@@ -7,9 +7,10 @@ const SubmitInput = styled.input`
   appearance: none;
 
   margin: 0;
-  padding: 0.5rem 1rem;
+  //padding: 0.5rem 1rem;
+  padding: ${(props) => (props.$textSize === "S" ? "5px 8px" : "0.5rem 1rem")};
 
-  font-size: 1rem;
+  font-size: ${(props) => (props.$textSize === "S" ? "13px" : "1rem")};
   font-weight: 500;
   text-align: center;
   text-decoration: none;
@@ -35,13 +36,14 @@ const SubmitInput = styled.input`
   }
 `;
 
-const Button = ({ text, onClick, isPrint }) => {
+const Button = ({ text, onClick, isPrint, size }) => {
   return (
     <SubmitInput
       onClick={onClick ? onClick : null}
       type="submit"
       value={text}
       $isPrint={isPrint}
+      $textSize={size}
     />
   );
 };
@@ -50,6 +52,7 @@ Button.propTypes = {
   text: PropTypes.string.isRequired,
   onClick: PropTypes.func,
   isPrint: PropTypes.bool,
+  size: PropTypes.string,
 };
 
 export default Button;

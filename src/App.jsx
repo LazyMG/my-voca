@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import Section from "./components/Section.jsx";
 import { Reset } from "styled-reset";
-import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import Home from "./router/Home.jsx";
 import Profile from "./router/Profile.jsx";
@@ -26,9 +25,9 @@ const Content = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 80px;
+  gap: 50px;
   background-color: red;
-  width: 1280px;
+  width: 1100px;
   height: 800px;
 `;
 
@@ -36,9 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
+      // <ProtectedRoute>
+      //   <Layout />
+      // </ProtectedRoute>
+      <Layout />
     ),
     children: [
       {
@@ -65,30 +65,38 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: (
-      <Layout>
-        <Login />
-      </Layout>
-    ),
+    element: <Layout />,
+    children: [
+      {
+        path: "",
+        element: <Login />,
+      },
+    ],
   },
   {
     path: "/create-account",
-    element: (
-      <Layout>
-        <CreateAccount />
-      </Layout>
-    ),
+    element: <Layout />,
+    children: [
+      {
+        path: "",
+        element: <CreateAccount />,
+      },
+    ],
   },
 ]);
 
 function App() {
   return (
     <>
-      <Reset />
+      {/* <Reset />
       <Page>
         <Content>
           <Section />
         </Content>
+      </Page> */}
+      <Reset />
+      <Page>
+        <RouterProvider router={router} />
       </Page>
     </>
   );

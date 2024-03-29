@@ -17,7 +17,7 @@ const LeftWrapper = styled.div`
 
 const RightWrapper = styled.div`
   background-color: ${(props) => props.$currentbg};
-  width: 750px;
+  width: 650px;
   height: 800px;
   border-radius: 20px;
 
@@ -85,30 +85,6 @@ const Section = () => {
 
   return (
     <>
-      {/* <Wrapper
-        $disabled={disableSec("RANGE")}
-        $currentbg={selectBgColor("RANGE")}
-      >
-        <Content>
-          <RangeSec />
-        </Content>
-      </Wrapper>
-      <Wrapper
-        $disabled={disableSec("SELECT")}
-        $currentbg={selectBgColor("SELECT")}
-      >
-        <Content>
-          <SelectSec />
-        </Content>
-      </Wrapper>
-      <Wrapper
-        $disabled={disableSec("LIST")}
-        $currentbg={selectBgColor("LIST")}
-      >
-        <Content>
-          <ListSec />
-        </Content>
-      </Wrapper> */}
       <LeftWrapper>
         <Wrapper
           $disabled={disableSec("RANGE")}
