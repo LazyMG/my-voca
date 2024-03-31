@@ -42,11 +42,11 @@ const Content = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 80px;
-  background-color: #f5f6fa;
+  gap: 40px;
+  //background-color: #f5f6fa;
   width: 1100px;
   height: 800px;
-  border-radius: 15px;
+  /* border-radius: 15px; */
 `;
 
 const Layout = () => {

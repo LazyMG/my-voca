@@ -1,9 +1,19 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/elements/Button";
 
 const Wraapper = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #f5f6fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+`;
+
+const Container = styled.div`
   width: 70%;
   height: 70%;
   //background-color: blue;
@@ -16,6 +26,7 @@ const Wraapper = styled.div`
 const Title = styled.h1`
   font-size: 60px;
   font-weight: 600;
+  //background-color: red;
 `;
 
 const Content = styled.div`
@@ -31,15 +42,16 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  //align-items: center;
   gap: 40px;
-  background-color: red;
-  width: 80%;
+  //background-color: red;
+  width: 60%;
+  padding-left: 80px;
 `;
 
 const EmailDiv = styled.div`
   display: flex;
-  justify-content: space-between;
+  //justify-content: space-between;
   width: 100%;
   gap: 10px;
 `;
@@ -82,9 +94,18 @@ const TextBox = styled.input`
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: flex-end;
+  width: 70%;
+  //background-color: blue;
 `;
 
-const MessageDiv = styled.div``;
+const Switcher = styled.div`
+  color: black;
+  font-weight: 600;
+  a {
+    color: black;
+    text-decoration: none;
+  }
+`;
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -96,30 +117,39 @@ const CreateAccount = () => {
 
   return (
     <Wraapper>
-      <Title>Create Account</Title>
-      <Content>
-        <Form>
-          <EmailDiv>
-            <TextBox {...register("email")} type="email" placeholder="Email" />
-            <Button onClick={emailConfirm} text="중복확인" size={"S"} />
-          </EmailDiv>
+      <Container>
+        <Title>Create Account</Title>
+        <Content>
+          <Form>
+            <EmailDiv>
+              <TextBox
+                {...register("email")}
+                type="email"
+                placeholder="Email"
+              />
+              <Button onClick={emailConfirm} text="Check" size={"S"} />
+            </EmailDiv>
 
-          <TextBox
-            {...register("password")}
-            type="password"
-            placeholder="Password"
-          />
-          <TextBox
-            {...register("passwordConfirm")}
-            type="password"
-            placeholder="Password Confirm"
-          />
-          <ButtonDiv>
-            <Button text="가입하기" />
-          </ButtonDiv>
-        </Form>
-        <MessageDiv>로그인</MessageDiv>
-      </Content>
+            <TextBox
+              {...register("password")}
+              type="password"
+              placeholder="Password"
+            />
+            <TextBox
+              {...register("passwordConfirm")}
+              type="password"
+              placeholder="Password Confirm"
+            />
+            <ButtonDiv>
+              <Button text="Sign In" />
+            </ButtonDiv>
+          </Form>
+          <Switcher>
+            {"Already have an account? "}
+            <Link to="/login">Login &rarr;</Link>
+          </Switcher>
+        </Content>
+      </Container>
     </Wraapper>
   );
 };
