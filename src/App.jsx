@@ -12,6 +12,7 @@ import UserWord from "./router/UserWord.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { auth } from "./firebase.js";
 import { useEffect } from "react";
+import Edit from "./router/Edit.jsx";
 
 const Page = styled.div`
   background-color: #7f8fa6;
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "upload",
         element: <Upload />,
+      },
+      {
+        path: "edit",
+        element: <Edit />,
       },
       {
         path: "user/:uid",
