@@ -14,14 +14,19 @@ const Wrapper = styled.div`
 
 const Profile = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const onClick = () => {
     navigate("/upload");
   };
+
   return (
     <Wrapper>
       Profile
-      <Button onClick={onClick} text="Upload" />
+      {user?.displayName}
+      {user?.email === "cbfmark@gmail.com" ? (
+        <Button onClick={onClick} text="Upload" />
+      ) : null}
     </Wrapper>
   );
 };

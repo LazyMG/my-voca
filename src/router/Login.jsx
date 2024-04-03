@@ -2,6 +2,10 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/elements/Button";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { useSetRecoilState } from "recoil";
+import { loginState } from "../atoms";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -105,19 +109,52 @@ const Switcher = styled.div`
 
 const Login = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
+  const setIsLogin = useSetRecoilState(loginState);
+
+  const onValid = async (data) => {
+    const { email, password } = data;
+    console.log(email, password);
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setIsLogin(true);
+      navigate("/");
+    } catch (error) {
+      setError("password", { message: error.message });
+    }
+  };
 
   return (
     <Wrapper>
       <Container>
         <Title>Login</Title>
         <Content>
-          <Form>
-            <TextBox {...register("email")} type="email" placeholder="Email" />
+          <Form onSubmit={handleSubmit(onValid)}>
             <TextBox
-              {...register("password")}
+              {...register("email", {
+                required: {
+                  message: "Email을 입력해주세요.",
+                },
+              })}
+              type="email"
+              placeholder="Email"
+              required
+            />
+            <TextBox
+              {...register("password", {
+                required: {
+                  message: "Password를 입력해주세요.",
+                },
+              })}
               type="password"
               placeholder="Password"
+              required
             />
             <ButtonDiv>
               <Button text="Login" />

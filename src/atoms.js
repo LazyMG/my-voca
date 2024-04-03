@@ -28,3 +28,8 @@ export const dbWordList = atom({
   key: "dbWord",
   default: [],
 });
+
+export const loginState = atom({
+  key: "userIsLogin",
+  default: null,
+});

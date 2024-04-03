@@ -1,5 +1,9 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { auth } from "../firebase";
+import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { loginState } from "../atoms";
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,6 +54,24 @@ const Content = styled.div`
 `;
 
 const Layout = () => {
+  const user = localStorage.getItem("user");
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const logout = async () => {
+    const ok = confirm("Are you sure want to log out?");
+    if (ok) {
+      setIsLogin(false);
+      localStorage.clear();
+      await auth.signOut();
+      navigate("/login");
+    }
+  };
+
   return (
     <Wrapper>
       <PageContainer>
@@ -94,29 +116,30 @@ const Layout = () => {
               </svg>
             </MenuItem>
           </Link>
-          <Link to="/login">
-            <MenuItem>
-              <svg
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  clipRule="evenodd"
-                  fillRule="evenodd"
-                  d="M17 4.25A2.25 2.25 0 0 0 14.75 2h-5.5A2.25 2.25 0 0 0 7 4.25v2a.75.75 0 0 0 1.5 0v-2a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 .75.75v11.5a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1-.75-.75v-2a.75.75 0 0 0-1.5 0v2A2.25 2.25 0 0 0 9.25 18h5.5A2.25 2.25 0 0 0 17 15.75V4.25Z"
-                />
-                <path
-                  clipRule="evenodd"
-                  fillRule="evenodd"
-                  d="M1 10a.75.75 0 0 1 .75-.75h9.546l-1.048-.943a.75.75 0 1 1 1.004-1.114l2.5 2.25a.75.75 0 0 1 0 1.114l-2.5 2.25a.75.75 0 1 1-1.004-1.114l1.048-.943H1.75A.75.75 0 0 1 1 10Z"
-                />
-              </svg>
-            </MenuItem>
-          </Link>
-          {/* <Link>
-            <MenuItem>
+          {!(isLogin || user) ? (
+            <Link to="/login">
+              <MenuItem>
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                    d="M17 4.25A2.25 2.25 0 0 0 14.75 2h-5.5A2.25 2.25 0 0 0 7 4.25v2a.75.75 0 0 0 1.5 0v-2a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 .75.75v11.5a.75.75 0 0 1-.75.75h-5.5a.75.75 0 0 1-.75-.75v-2a.75.75 0 0 0-1.5 0v2A2.25 2.25 0 0 0 9.25 18h5.5A2.25 2.25 0 0 0 17 15.75V4.25Z"
+                  />
+                  <path
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                    d="M1 10a.75.75 0 0 1 .75-.75h9.546l-1.048-.943a.75.75 0 1 1 1.004-1.114l2.5 2.25a.75.75 0 0 1 0 1.114l-2.5 2.25a.75.75 0 1 1-1.004-1.114l1.048-.943H1.75A.75.75 0 0 1 1 10Z"
+                  />
+                </svg>
+              </MenuItem>
+            </Link>
+          ) : (
+            <MenuItem onClick={logout}>
               <svg
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -135,7 +158,7 @@ const Layout = () => {
                 />
               </svg>
             </MenuItem>
-          </Link> */}
+          )}
         </Menu>
         <Content>
           <Outlet />

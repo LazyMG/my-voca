@@ -10,6 +10,8 @@ import Login from "./router/Login.jsx";
 import CreateAccount from "./router/CreateAccount.jsx";
 import UserWord from "./router/UserWord.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import { auth } from "./firebase.js";
+import { useEffect } from "react";
 
 const Page = styled.div`
   background-color: #7f8fa6;
@@ -35,10 +37,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <ProtectedRoute>
-      //   <Layout />
-      // </ProtectedRoute>
-      <Layout />
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
     ),
     children: [
       {
@@ -86,14 +87,16 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const init = async () => {
+    await auth.authStateReady();
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <>
-      {/* <Reset />
-      <Page>
-        <Content>
-          <Section />
-        </Content>
-      </Page> */}
       <Reset />
       <Page>
         <RouterProvider router={router} />

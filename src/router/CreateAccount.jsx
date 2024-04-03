@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/elements/Button";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../firebase";
 
 const Wraapper = styled.div`
   width: 100%;
@@ -109,10 +111,38 @@ const Switcher = styled.div`
 
 const CreateAccount = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
 
   const emailConfirm = (event) => {
     event.preventDefault();
+    //email 체크
+  };
+
+  const onValid = async (data) => {
+    const { email, password, passwordConfirm } = data;
+    //email 체크
+    if (password !== passwordConfirm) {
+      setError("passwordConfirm", { message: "비밀번호가 일치하지 않습니다." });
+      return;
+    }
+    try {
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await updateProfile(credentials.user, {
+        displayName: "maga",
+      });
+      navigate("/login");
+    } catch (error) {
+      setError("password", { message: error.message });
+    }
   };
 
   return (
@@ -120,26 +150,48 @@ const CreateAccount = () => {
       <Container>
         <Title>Create Account</Title>
         <Content>
-          <Form>
+          <Form onSubmit={handleSubmit(onValid)}>
             <EmailDiv>
               <TextBox
-                {...register("email")}
+                {...register("email", {
+                  required: {
+                    message: "Email을 입력해주세요.",
+                  },
+                })}
                 type="email"
                 placeholder="Email"
               />
               <Button onClick={emailConfirm} text="Check" size={"S"} />
             </EmailDiv>
-
             <TextBox
-              {...register("password")}
+              {...register("password", {
+                required: {
+                  message: "Password를 입력해주세요.",
+                },
+                minLength: {
+                  value: 6,
+                  message: "Password의 길이는 6자 이상입니다.",
+                },
+              })}
               type="password"
               placeholder="Password"
             />
+            <span>{errors?.password?.message}</span>
             <TextBox
-              {...register("passwordConfirm")}
+              {...register("passwordConfirm", {
+                required: {
+                  message: "Password 확인이 필요합니다.",
+                },
+                minLength: {
+                  value: 6,
+                  message: "Password의 길이는 6자 이상입니다.",
+                },
+              })}
               type="password"
               placeholder="Password Confirm"
             />
+            <span>{errors?.passwordConfirm?.message}</span>
+
             <ButtonDiv>
               <Button text="Sign In" />
             </ButtonDiv>
