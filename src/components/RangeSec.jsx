@@ -44,7 +44,7 @@ const Content = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
-  padding-top: 70px;
+  padding-top: 140px;
 `;
 
 const Form = styled.form`
@@ -141,7 +141,7 @@ const ErrorDiv = styled.div`
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: flex-end;
-  padding-right: 42px;
+  //padding-right: 42px;
 `;
 
 const RangeSec = () => {

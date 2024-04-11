@@ -18,42 +18,50 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  width: 70%;
-  height: 70%;
-  //background-color: blue;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1.5fr 3fr;
+`;
+
+const Header = styled.div`
   display: flex;
-  flex-direction: column;
-  //justify-content: space-around;
-  align-items: center;
-  gap: 120px;
+  justify-content: center;
+  align-items: end;
 `;
 
 const Title = styled.h1`
   font-size: 60px;
   font-weight: 600;
-  //background-color: red;
-  padding-top: 30px;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  //justify-content: center;
+  padding-top: 70px;
   align-items: center;
   width: 80%;
   gap: 30px;
-  //background-color: green;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  //align-items: center;
-  gap: 40px;
-  //background-color: red;
+  gap: 30px;
   width: 60%;
-  padding-left: 80px;
+  padding-left: 120px;
+`;
+
+const TextDiv = styled.div`
+  display: flex;
 `;
 
 const TextBox = styled.input`
@@ -91,11 +99,15 @@ const TextBox = styled.input`
   }
 `;
 
+const ErrorSpan = styled.span`
+  font-size: 16px;
+  color: red;
+`;
+
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 70%;
-  //background-color: blue;
 `;
 
 const Switcher = styled.div`
@@ -127,44 +139,56 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       setError("password", { message: error.message });
+      console.log(error);
     }
   };
 
   return (
     <Wrapper>
       <Container>
-        <Title>Login</Title>
-        <Content>
-          <Form onSubmit={handleSubmit(onValid)}>
-            <TextBox
-              {...register("email", {
-                required: {
-                  message: "Email을 입력해주세요.",
-                },
-              })}
-              type="email"
-              placeholder="Email"
-              required
-            />
-            <TextBox
-              {...register("password", {
-                required: {
-                  message: "Password를 입력해주세요.",
-                },
-              })}
-              type="password"
-              placeholder="Password"
-              required
-            />
-            <ButtonDiv>
-              <Button text="Login" />
-            </ButtonDiv>
-          </Form>
-          <Switcher>
-            {"Don't have an account? "}
-            <Link to="/create-account">Create one &rarr;</Link>
-          </Switcher>
-        </Content>
+        <Header>
+          <Title>Login</Title>
+        </Header>
+        <ContentWrapper>
+          <Content>
+            <Form onSubmit={handleSubmit(onValid)}>
+              <TextDiv>
+                <TextBox
+                  {...register("email", {
+                    required: {
+                      message: "Email을 입력해주세요.",
+                    },
+                  })}
+                  type="email"
+                  placeholder="Email"
+                  required
+                />
+                <ErrorSpan></ErrorSpan>
+              </TextDiv>
+              <TextDiv>
+                <TextBox
+                  {...register("password", {
+                    required: {
+                      message: "Password를 입력해주세요.",
+                    },
+                  })}
+                  type="password"
+                  placeholder="Password"
+                  required
+                />
+                <ErrorSpan></ErrorSpan>
+              </TextDiv>
+
+              <ButtonDiv>
+                <Button text="Login" />
+              </ButtonDiv>
+            </Form>
+            <Switcher>
+              {"Don't have an account? "}
+              <Link to="/create-account">Create one &rarr;</Link>
+            </Switcher>
+          </Content>
+        </ContentWrapper>
       </Container>
     </Wrapper>
   );

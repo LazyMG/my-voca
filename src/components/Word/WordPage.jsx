@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { categoryState } from "../../atoms";
 import { getCurrentList } from "../../utils/randomSelect";
+import { forwardRef } from "react";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -77,14 +78,15 @@ const ProblemLine = styled.span`
   font-size: 20px;
 `;
 
-const WordPage = ({ meanList, wordList, forPrintRef }) => {
+const WordPage = ({ meanList, wordList, currentPage, forPrintRef }) => {
   const category = useRecoilValue(categoryState);
 
   let count = 0;
+  let totalPage = category.page || currentPage || 1;
 
   return (
     <Wrapper ref={forPrintRef}>
-      {Array.from({ length: category.page }).map((_, page) => (
+      {Array.from({ length: totalPage }).map((_, page) => (
         <div key={page}>
           <PageContainer key={page + "problem"}>
             <PageHeader>
@@ -187,24 +189,5 @@ const WordPage = ({ meanList, wordList, forPrintRef }) => {
     </Wrapper>
   );
 };
-
-// WordPage.propTypes = {
-//   //수정필요
-//   meanList: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.number.isRequired,
-//       list: PropTypes.arrayOf(PropTypes.number).isRequired,
-//     })
-//   ).isRequired,
-//   //수정필요
-//   wordList: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.number.isRequired,
-//       list: PropTypes.arrayOf(PropTypes.number).isRequired,
-//     })
-//   ).isRequired,
-//   currentPage: PropTypes.number.isRequired,
-//   forPrintRef: PropTypes.object.isRequired,
-// };
 
 export default WordPage;

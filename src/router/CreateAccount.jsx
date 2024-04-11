@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/elements/Button";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { addDoc, collection } from "firebase/firestore";
 
-const Wraapper = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: #f5f6fa;
@@ -16,19 +17,28 @@ const Wraapper = styled.div`
 `;
 
 const Container = styled.div`
-  width: 70%;
-  height: 70%;
-  //background-color: blue;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1.5fr 3fr;
+`;
+
+const Header = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
+  align-items: end;
 `;
 
 const Title = styled.h1`
   font-size: 60px;
   font-weight: 600;
-  //background-color: red;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
 `;
 
 const Content = styled.div`
@@ -38,17 +48,18 @@ const Content = styled.div`
   align-items: center;
   width: 80%;
   gap: 30px;
+  /* background-color: yellow; */
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  //align-items: center;
-  gap: 40px;
-  //background-color: red;
+  gap: 30px;
   width: 60%;
-  padding-left: 80px;
+  padding-left: 120px;
+  padding-top: 20px;
+  /* background-color: red; */
 `;
 
 const EmailDiv = styled.div`
@@ -56,6 +67,12 @@ const EmailDiv = styled.div`
   //justify-content: space-between;
   width: 100%;
   gap: 10px;
+`;
+
+const TextDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 `;
 
 const TextBox = styled.input`
@@ -91,6 +108,13 @@ const TextBox = styled.input`
   &:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
   }
+
+  /* background-color: blue; */
+`;
+
+const ErrorSpan = styled.span`
+  font-size: 16px;
+  color: red;
 `;
 
 const ButtonDiv = styled.div`
@@ -124,7 +148,7 @@ const CreateAccount = () => {
   };
 
   const onValid = async (data) => {
-    const { email, password, passwordConfirm } = data;
+    const { email, password, passwordConfirm, username } = data;
     //email 체크
     if (password !== passwordConfirm) {
       setError("passwordConfirm", { message: "비밀번호가 일치하지 않습니다." });
@@ -137,7 +161,17 @@ const CreateAccount = () => {
         password
       );
       await updateProfile(credentials.user, {
-        displayName: "maga",
+        displayName: username,
+        providerData: "Hello!",
+      });
+      await addDoc(collection(db, "users"), {
+        email,
+        password,
+        createdAt: Date.now(),
+        username: username || "Anonymous",
+        userId: credentials.user.uid,
+        introduce: "Hello!",
+        wordList: {},
       });
       navigate("/login");
     } catch (error) {
@@ -146,63 +180,87 @@ const CreateAccount = () => {
   };
 
   return (
-    <Wraapper>
+    <Wrapper>
       <Container>
-        <Title>Create Account</Title>
-        <Content>
-          <Form onSubmit={handleSubmit(onValid)}>
-            <EmailDiv>
-              <TextBox
-                {...register("email", {
-                  required: {
-                    message: "Email을 입력해주세요.",
-                  },
-                })}
-                type="email"
-                placeholder="Email"
-              />
-              <Button onClick={emailConfirm} text="Check" size={"S"} />
-            </EmailDiv>
-            <TextBox
-              {...register("password", {
-                required: {
-                  message: "Password를 입력해주세요.",
-                },
-                minLength: {
-                  value: 6,
-                  message: "Password의 길이는 6자 이상입니다.",
-                },
-              })}
-              type="password"
-              placeholder="Password"
-            />
-            <span>{errors?.password?.message}</span>
-            <TextBox
-              {...register("passwordConfirm", {
-                required: {
-                  message: "Password 확인이 필요합니다.",
-                },
-                minLength: {
-                  value: 6,
-                  message: "Password의 길이는 6자 이상입니다.",
-                },
-              })}
-              type="password"
-              placeholder="Password Confirm"
-            />
-            <span>{errors?.passwordConfirm?.message}</span>
+        <Header>
+          <Title>Create Account</Title>
+        </Header>
+        <ContentWrapper>
+          <Content>
+            <Form onSubmit={handleSubmit(onValid)}>
+              <EmailDiv>
+                <TextBox
+                  {...register("email", {
+                    required: {
+                      message: "Email을 입력해주세요.",
+                    },
+                  })}
+                  type="email"
+                  placeholder="Email"
+                />
+                <Button onClick={emailConfirm} text="Check" size={"S"} />
+              </EmailDiv>
+              <TextDiv>
+                <TextBox
+                  {...register("username", {
+                    required: {
+                      message: "Username을 입력해주세요.",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Username의 길이는 10자 이내입니다.",
+                    },
+                  })}
+                  type="text"
+                  placeholder="Username"
+                />
+                <ErrorSpan>{errors?.username?.message}</ErrorSpan>
+              </TextDiv>
+              <TextDiv>
+                <TextBox
+                  {...register("password", {
+                    required: {
+                      message: "Password를 입력해주세요.",
+                    },
+                    minLength: {
+                      value: 6,
+                      message: "Password의 길이는 6자 이상입니다.",
+                    },
+                  })}
+                  type="password"
+                  placeholder="Password"
+                />
+                <ErrorSpan>{errors?.password?.message}</ErrorSpan>
+              </TextDiv>
+              <TextDiv>
+                <TextBox
+                  {...register("passwordConfirm", {
+                    required: {
+                      message: "Password 확인이 필요합니다.",
+                    },
+                    minLength: {
+                      value: 6,
+                      message: "Password의 길이는 6자 이상입니다.",
+                    },
+                  })}
+                  type="password"
+                  placeholder="Password Confirm"
+                />
+                <ErrorSpan>{errors?.passwordConfirm?.message}dsda</ErrorSpan>
+              </TextDiv>
 
-            <ButtonDiv>
-              <Button text="Sign In" />
-            </ButtonDiv>
-          </Form>
-          <Switcher>
-            {"Already have an account? "}
-            <Link to="/login">Login &rarr;</Link>
-          </Switcher>
-        </Content>
+              <ButtonDiv>
+                <Button text="Sign In" />
+              </ButtonDiv>
+            </Form>
+            <Switcher>
+              {"Already have an account? "}
+              <Link to="/login">Login &rarr;</Link>
+            </Switcher>
+          </Content>
+        </ContentWrapper>
       </Container>
-    </Wraapper>
+    </Wrapper>
   );
 };
 

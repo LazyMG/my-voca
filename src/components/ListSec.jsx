@@ -1,5 +1,11 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { categoryState, dbWordList, sectionState } from "../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  categoryState,
+  dbWordList,
+  sectionState,
+  testState,
+  userState,
+} from "../atoms";
 import styled from "styled-components";
 import Button from "./elements/Button";
 import WordHeader from "./Word/WordHeader";
@@ -8,6 +14,14 @@ import { useEffect, useRef, useState } from "react";
 import { getCurrentList, getRandomWords } from "../utils/randomSelect";
 import { useReactToPrint } from "react-to-print";
 import WordPage from "./Word/WordPage";
+import {
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -128,6 +142,7 @@ const ListSec = () => {
   const dbList = useRecoilValue(dbWordList);
   const [meanList, setMeanList] = useState([]);
   const [wordList, setWordList] = useState([]);
+  const setTest = useSetRecoilState(testState);
 
   let rowCount = 1;
 
@@ -205,6 +220,30 @@ const ListSec = () => {
     handlePrint();
   };
 
+  const savePage = async () => {
+    setTest({ meanList, wordList, currentPage: category.page });
+    const localUser = JSON.parse(localStorage.getItem("user"));
+    const fetchUser = async () => {
+      const userQuery = query(
+        collection(db, "users"),
+        where("userId", "==", localUser?.uid)
+      );
+      const snapshot = await getDocs(userQuery);
+      snapshot.forEach(async (doc) => {
+        const userRef = doc.ref; // 문서의 참조를 직접 사용합니다.
+        await updateDoc(userRef, {
+          myWordList: {
+            meanList,
+            wordList,
+            currentPage: category.page,
+          },
+        });
+      });
+      console.log("complete");
+    };
+    fetchUser();
+  };
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: "Voca Test",
@@ -265,6 +304,7 @@ const ListSec = () => {
 
           <ButtonDiv>
             <Button onClick={prevSection} text={"이전"} />
+            <Button onClick={savePage} text={"저장"} />
             <Button onClick={printPage} text={"출력"} isPrint={true} />
           </ButtonDiv>
         </Content>

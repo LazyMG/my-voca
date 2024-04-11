@@ -33,3 +33,13 @@ export const loginState = atom({
   key: "userIsLogin",
   default: null,
 });
+
+export const userState = atom({
+  key: "user",
+  default: null,
+});
+
+export const testState = atom({
+  key: "test",
+  default: {},
+});

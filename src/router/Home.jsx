@@ -20,7 +20,6 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  //background-color: blue;
   display: flex;
   justify-content: center;
   align-items: end;
@@ -32,7 +31,6 @@ const Title = styled.h1`
 `;
 
 const Content = styled.div`
-  //background-color: red;
   padding-inline: 150px;
   padding-top: 50px;
   padding-bottom: 60px;

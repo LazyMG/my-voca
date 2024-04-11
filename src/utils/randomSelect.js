@@ -83,7 +83,7 @@ export const generateRandomList = (arr, count) => {
 export const getCurrentList = (arr, count) => {
   const foundItem = arr.find((item) => item.id === count);
   if (!foundItem) {
-    console.log("getCurrent", arr, count);
+    //console.log("getCurrent", arr, count);
 
     return [];
   }

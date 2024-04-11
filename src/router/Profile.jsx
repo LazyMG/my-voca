@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import Button from "../components/elements/Button";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { db } from "../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { testState, userState } from "../atoms";
+import { useForm } from "react-hook-form";
+import { useReactToPrint } from "react-to-print";
+import WordPage from "../components/Word/WordPage";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -153,7 +161,7 @@ const TextArea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #1d9bf9;
+    border-color: black;
   }
 `;
 
@@ -161,7 +169,7 @@ const AttachFileButton = styled.label`
   width: fit-content;
   height: fit-content;
   padding: 10px 0px;
-  color: #1d9bf9;
+  color: black;
   text-align: center;
   border-radius: 20px;
   border: 2px solid black;
@@ -201,14 +209,71 @@ const RightButtonDiv = styled.div`
   justify-content: end;
 `;
 
+const PrintDiv = styled.div`
+  display: none;
+`;
+
 const Profile = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const localUser = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useRecoilState(userState);
+  const [isLoading, setIsLoading] = useState(true);
+  const [file, setFile] = useState();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const componentRef = useRef();
+  const testData = useRecoilValue(testState);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userQuery = query(
+        collection(db, "users"),
+        where("userId", "==", localUser?.uid)
+      );
+      const snapshot = await getDocs(userQuery);
+      const dbUser = snapshot.docs.map((doc) => {
+        const { userId, username, photo, introduce, myWordList } = doc.data();
+        return {
+          userId,
+          username,
+          photo,
+          introduce,
+          myWordList,
+        };
+      });
+      setUser(...dbUser);
+
+      setIsLoading(false);
+    };
+    fetchUser();
+  }, []);
 
   const onClick = (event) => {
     event.preventDefault();
     navigate("/upload");
   };
+
+  const editProfile = (event) => {
+    event.preventDefault();
+  };
+
+  const onValid = (data) => {
+    console.log(data);
+  };
+
+  const viewTest = () => {
+    if (isLoading) return;
+
+    handlePrint();
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Voca Test",
+  });
 
   return (
     <Wrapper>
@@ -217,22 +282,26 @@ const Profile = () => {
           <Title>
             <ProfilePhoto />
             <ProfileDiv>
-              <ProfileName>{user?.displayName}</ProfileName>
-              <ProfileText>Hello!</ProfileText>
+              <ProfileName>{user?.username}</ProfileName>
+              <ProfileText>{user?.introduce}</ProfileText>
             </ProfileDiv>
           </Title>
         </Header>
         <Content>
           <EditDiv>
-            <Form>
+            <Form onSubmit={handleSubmit(onValid)}>
               <FormContent>
                 <LeftFormContent>
                   <AttachFileButton htmlFor="file">Add photo</AttachFileButton>
                   <AttachFileInput type="file" id="file" accept="image/*" />
-                  <TextBox placeholder={user?.displayName} />
+                  <TextBox
+                    {...register("username")}
+                    placeholder={user?.username}
+                  />
                 </LeftFormContent>
                 <RightFormContent>
                   <TextArea
+                    {...register("introduce")}
                     rows={5}
                     maxLength={180}
                     placeholder="What is happening?!"
@@ -241,25 +310,35 @@ const Profile = () => {
                 </RightFormContent>
               </FormContent>
               <FormSubmitDiv>
-                <Button text="수정" />
+                <Button onClick={editProfile} text="수정" />
               </FormSubmitDiv>
             </Form>
           </EditDiv>
         </Content>
         <ButtonDiv>
           <LeftButtonDiv>
-            {user?.email === "cbfmark@gmail.com" ? (
+            {localUser?.email === "cbfmark@gmail.com" ? (
               <Button onClick={onClick} text="Upload" size={"S"} />
             ) : null}
-            {user?.email === "cbfmark@gmail.com" ? (
+            {localUser?.email === "cbfmark@gmail.com" ? (
               <Button onClick={onClick} text="My Word" size={"S"} />
             ) : null}
           </LeftButtonDiv>
           <RightButtonDiv>
-            <Button text="View Test" />
+            <Button onClick={viewTest} text="View Test" />
           </RightButtonDiv>
         </ButtonDiv>
       </Container>
+      {/* {!isLoading ? (
+        <PrintDiv>
+          <WordPage
+            forPrintRef={componentRef}
+            meanList={testData?.meanList}
+            wordList={testData?.wordList}
+            currentPage={testData?.page}
+          />
+        </PrintDiv>
+      ) : null} */}
     </Wrapper>
   );
 };
