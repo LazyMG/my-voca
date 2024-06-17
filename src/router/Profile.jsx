@@ -1,14 +1,13 @@
 import styled from "styled-components";
 import Button from "../components/elements/Button";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { testState, userState } from "../atoms";
 import { useForm } from "react-hook-form";
 import { useReactToPrint } from "react-to-print";
-import WordPage from "../components/Word/WordPage";
+import UserWords from "../components/Word/UserWords";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -197,24 +196,11 @@ const ButtonDiv = styled.div`
   align-items: center;
 `;
 
-const LeftButtonDiv = styled.div`
-  width: 50%;
-  display: flex;
-  gap: 30px;
-`;
-
-const RightButtonDiv = styled.div`
-  width: 50%;
-  display: flex;
-  justify-content: end;
-`;
-
 const PrintDiv = styled.div`
   display: none;
 `;
 
 const Profile = () => {
-  const navigate = useNavigate();
   const localUser = JSON.parse(localStorage.getItem("user"));
   const [user, setUser] = useRecoilState(userState);
   const [isLoading, setIsLoading] = useState(true);
@@ -224,8 +210,9 @@ const Profile = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [testData, setTestData] = useRecoilState(testState);
+
   const componentRef = useRef();
-  const testData = useRecoilValue(testState);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -244,17 +231,23 @@ const Profile = () => {
           myWordList,
         };
       });
+      //console.log("dbUser", dbUser[0].myWordList);
       setUser(...dbUser);
-
-      setIsLoading(false);
+      setTestData({
+        meanList: dbUser[0].myWordList.meanList,
+        wordList: dbUser[0].myWordList.wordList,
+        currentPage: dbUser[0].myWordList.currentPage,
+      });
     };
     fetchUser();
+    setIsLoading(false);
   }, []);
 
-  const onClick = (event) => {
-    event.preventDefault();
-    navigate("/upload");
-  };
+  useEffect(() => {
+    if (!JSON.stringify(testData) === "{}") {
+      setIsLoading(false);
+    }
+  }, [testData]);
 
   const editProfile = (event) => {
     event.preventDefault();
@@ -264,15 +257,15 @@ const Profile = () => {
     console.log(data);
   };
 
-  const viewTest = () => {
+  const printPage = () => {
     if (isLoading) return;
-
     handlePrint();
   };
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: "Voca Test",
+    removeAfterPrint: true,
   });
 
   return (
@@ -316,29 +309,19 @@ const Profile = () => {
           </EditDiv>
         </Content>
         <ButtonDiv>
-          <LeftButtonDiv>
-            {localUser?.email === "cbfmark@gmail.com" ? (
-              <Button onClick={onClick} text="Upload" size={"S"} />
-            ) : null}
-            {localUser?.email === "cbfmark@gmail.com" ? (
-              <Button onClick={onClick} text="My Word" size={"S"} />
-            ) : null}
-          </LeftButtonDiv>
-          <RightButtonDiv>
-            <Button onClick={viewTest} text="View Test" />
-          </RightButtonDiv>
+          <Button onClick={printPage} text="View Test" />
         </ButtonDiv>
       </Container>
-      {/* {!isLoading ? (
+      {!isLoading ? (
         <PrintDiv>
-          <WordPage
+          <UserWords
             forPrintRef={componentRef}
             meanList={testData?.meanList}
             wordList={testData?.wordList}
-            currentPage={testData?.page}
+            currentPage={testData?.currentPage}
           />
         </PrintDiv>
-      ) : null} */}
+      ) : null}
     </Wrapper>
   );
 };

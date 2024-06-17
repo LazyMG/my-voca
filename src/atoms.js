@@ -24,14 +24,22 @@ export const categoryState = atom({
   },
 });
 
-export const dbWordList = atom({
-  key: "dbWord",
+export const dbWordListState = atom({
+  key: "dbWordListState",
+  default: [],
+});
+
+export const selectedWordListState = atom({
+  key: "selectedWordListState",
   default: [],
 });
 
 export const loginState = atom({
   key: "userIsLogin",
-  default: null,
+  default: {
+    isLogin: false,
+    isLoading: true,
+  },
 });
 
 export const userState = atom({
@@ -40,6 +48,6 @@ export const userState = atom({
 });
 
 export const testState = atom({
-  key: "test",
+  key: "testState",
   default: {},
 });

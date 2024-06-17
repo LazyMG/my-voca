@@ -127,7 +127,7 @@ const Login = () => {
     setError,
     formState: { errors },
   } = useForm();
-  const setIsLogin = useSetRecoilState(loginState);
+  const setLogin = useSetRecoilState(loginState);
 
   const onValid = async (data) => {
     const { email, password } = data;
@@ -135,7 +135,10 @@ const Login = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      setIsLogin(true);
+      setLogin({
+        isLogin: true,
+        isLoading: true,
+      });
       navigate("/");
     } catch (error) {
       setError("password", { message: error.message });

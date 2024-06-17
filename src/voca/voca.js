@@ -1,6 +1,7 @@
 export const wordList = [
   {
     id: 0,
+    day: 1,
     list: [
       { id: 0, day: 1, word: "celebration", meaning: "축하, 기념행사" },
       { id: 1, day: 1, word: "worm", meaning: "벌레" },
@@ -21,6 +22,7 @@ export const wordList = [
   },
   {
     id: 1,
+    day: 2,
     list: [
       { id: 0, day: 2, word: "offer", meaning: "제공하다" },
       { id: 1, day: 2, word: "lobster", meaning: "바닷가재" },
@@ -36,6 +38,7 @@ export const wordList = [
   },
   {
     id: 2,
+    day: 3,
     list: [
       { id: 0, day: 3, word: "fisherman", meaning: "어부" },
       { id: 1, day: 3, word: "imaginable", meaning: "상상할 수 있는" },
@@ -51,6 +54,7 @@ export const wordList = [
   },
   {
     id: 3,
+    day: 4,
     list: [
       { id: 0, day: 4, word: "promote", meaning: "촉진하다" },
       { id: 1, day: 4, word: "incredibly", meaning: "믿을 수 없을 만큼" },
@@ -66,6 +70,7 @@ export const wordList = [
   },
   {
     id: 4,
+    day: 5,
     list: [
       { id: 0, day: 5, word: "conduct", meaning: "실행하다" },
       { id: 1, day: 5, word: "dweller", meaning: "거주자" },
@@ -81,6 +86,7 @@ export const wordList = [
   },
   {
     id: 5,
+    day: 6,
     list: [
       { id: 0, day: 6, word: "perspective", meaning: "관점, 시각" },
       { id: 1, day: 6, word: "phase", meaning: "단계, 국면" },
@@ -96,6 +102,7 @@ export const wordList = [
   },
   {
     id: 6,
+    day: 7,
     list: [
       { id: 0, day: 8, word: "process", meaning: "과정" },
       { id: 1, day: 8, word: "comfortabie", meaning: "편한, 기분좋은" },
@@ -111,6 +118,7 @@ export const wordList = [
   },
   {
     id: 7,
+    day: 8,
     list: [
       { id: 0, day: 8, word: "contact", meaning: "접촉" },
       { id: 1, day: 8, word: "contain", meaning: "들어있다, 포함하다" },
@@ -126,6 +134,7 @@ export const wordList = [
   },
   {
     id: 8,
+    day: 9,
     list: [
       { id: 0, day: 9, word: "associate with", meaning: "~를 관련시키다" },
       { id: 1, day: 9, word: "at least", meaning: "적어도" },
@@ -141,6 +150,7 @@ export const wordList = [
   },
   {
     id: 9,
+    day: 10,
     list: [
       { id: 0, day: 10, word: "take care of", meaning: "돌보다" },
       { id: 1, day: 10, word: "take place", meaning: "열리다, 개최되다" },
@@ -156,6 +166,7 @@ export const wordList = [
   },
   {
     id: 10,
+    day: 11,
     list: [
       { id: 0, day: 11, word: "architecture", meaning: "건축" },
       { id: 1, day: 11, word: "relevant", meaning: "관련된" },
@@ -171,6 +182,7 @@ export const wordList = [
   },
   {
     id: 11,
+    day: 12,
     list: [
       { id: 0, day: 12, word: "temptation", meaning: "유혹" },
       { id: 1, day: 12, word: "nutritious", meaning: "영양가 많은" },
@@ -191,6 +203,7 @@ export const wordList = [
   },
   {
     id: 12,
+    day: 13,
     list: [
       { id: 0, day: 13, word: "be through", meaning: "끝내다. 마치다" },
       { id: 1, day: 13, word: "self-confidence", meaning: "자신감" },
@@ -215,7 +228,7 @@ export const wordList = [
     ],
   },
   {
-    day: 15,
+    day: 14,
     id: 13,
     list: [
       { id: 0, day: 14, word: "rather than", meaning: "-라기보다는" },
@@ -232,6 +245,7 @@ export const wordList = [
   },
   {
     id: 14,
+    day: 15,
     list: [
       { id: 0, day: 15, word: "unfortunately", meaning: "불행하게도" },
       { id: 1, day: 15, word: "revolution", meaning: "혁명" },
@@ -247,6 +261,7 @@ export const wordList = [
   },
   {
     id: 15,
+    day: 16,
     list: [
       { id: 0, day: 16, word: "release", meaning: "방출하다, 풀어놓다" },
       { id: 1, day: 16, word: "relieved", meaning: "안도하는" },
@@ -262,6 +277,7 @@ export const wordList = [
   },
   {
     id: 16,
+    day: 17,
     list: [
       { id: 0, day: 17, word: "regularly", meaning: "규칙적으로" },
       { id: 1, day: 17, word: "reinforce", meaning: "강화하다" },
@@ -282,6 +298,7 @@ export const wordList = [
   },
   {
     id: 17,
+    day: 18,
     list: [
       { id: 0, day: 18, word: "display", meaning: "전시하다" },
       { id: 1, day: 18, word: "distinguish", meaning: "구별하다, 구분하다" },
@@ -297,6 +314,7 @@ export const wordList = [
   },
   {
     id: 18,
+    day: 19,
     list: [
       { id: 0, day: 19, word: "establish", meaning: "설립하다" },
       { id: 1, day: 19, word: "evaluate", meaning: "평가하다" },
@@ -312,6 +330,7 @@ export const wordList = [
   },
   {
     id: 19,
+    day: 20,
     list: [
       { id: 0, day: 20, word: "fundamental", meaning: "기본적인" },
       { id: 1, day: 20, word: "gender", meaning: "성별" },

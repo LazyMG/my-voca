@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { numberState, sectionState } from "../atoms";
+import { dbWordListState, numberState, sectionState } from "../atoms";
 import {
   generateRangeArray,
   parseInputString,
   processArray,
 } from "../utils/parsing";
 import Button from "./elements/Button";
-import { wordList } from "../voca/voca";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -101,7 +100,7 @@ const TextBox = styled.input`
   -moz-appearance: none; // 모질라 브라우저에서 기본 스타일 제거
   appearance: none; // 기본 브라우저에서 기본 스타일 제거
   font-size: 15px;
-  color: #222222;
+  color: #2a2a2a;
   width: ${(props) => (props.$custom ? "238px" : "90px")};
   border: none;
   border-bottom: solid #aaaaaa 1px;
@@ -109,6 +108,10 @@ const TextBox = styled.input`
   text-align: center;
   position: relative;
   background: none;
+
+  &::placeholder {
+    color: #bdbdbd;
+  }
 
   &:focus {
     outline: none;
@@ -156,16 +159,17 @@ const RangeSec = () => {
   const [currentSection, setCurrentSection] = useRecoilState(sectionState);
   const setNumber = useSetRecoilState(numberState);
   const [totalPages, setTotalPages] = useState(0);
+  const dbWordList = useRecoilValue(dbWordListState);
+
+  const getPages = useCallback(() => {
+    //0일 때 에러처리
+    return dbWordList.length;
+  }, [dbWordList]);
 
   useEffect(() => {
     const totalPages = getPages();
     setTotalPages(totalPages);
-  }, []);
-
-  const getPages = () => {
-    //0일 때 에러처리
-    return wordList.length;
-  };
+  }, [getPages]);
 
   const handleRadioChange = (event) => {
     const option = event.target.value;
@@ -246,7 +250,7 @@ const RangeSec = () => {
                     type="number"
                     min={1}
                     $autobg={currentSection}
-                    placeholder={1}
+                    placeholder={totalPages === 0 ? "" : 1}
                   />
                   ~
                   <TextBox

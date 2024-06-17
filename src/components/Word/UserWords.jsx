@@ -1,8 +1,4 @@
-import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { categoryState, testState } from "../../atoms";
-import { getCurrentList } from "../../utils/randomSelect";
-import { useEffect } from "react";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -76,25 +72,37 @@ const ProblemLine = styled.span`
   font-size: 20px;
 `;
 
-const WordPage = ({ meanList, wordList, currentPage, forPrintRef }) => {
-  const category = useRecoilValue(categoryState);
-  //const testData = useRecoilValue(testState);
+const UserWords = ({ meanList, wordList, currentPage, forPrintRef }) => {
+  let count = 1;
+  let totalPage = currentPage || 1;
+  let isProblemStart = true;
+  let isAnswerStart = true;
 
-  let count = 0;
-  let totalPage = category.page || currentPage || 1;
-
-  useEffect(() => {
-    console.log(meanList);
-    console.log(wordList);
-    console.log(currentPage);
-    console.log(category);
-  }, [meanList, wordList, currentPage, category]);
+  const initializeCount = (isProblem) => {
+    if (isProblem) {
+      if (isProblemStart) {
+        count = 1;
+        isProblemStart = false;
+        isAnswerStart = true;
+        return count++;
+      }
+      return count++;
+    } else {
+      if (isAnswerStart) {
+        count = 1;
+        isAnswerStart = false;
+        isProblemStart = true;
+        return count++;
+      }
+      return count++;
+    }
+  };
 
   return (
     <Wrapper ref={forPrintRef}>
       {Array.from({ length: totalPage }).map((_, page) => (
         <div key={page}>
-          <PageContainer key={page + "problem"}>
+          <PageContainer>
             <PageHeader>
               <PageTitle>단어 테스트 {page + 1}</PageTitle>
               <PageName>
@@ -103,91 +111,76 @@ const WordPage = ({ meanList, wordList, currentPage, forPrintRef }) => {
               </PageName>
             </PageHeader>
             <PageProblem>
-              {category.mean !== 0
-                ? getCurrentList(meanList, page)?.map((item, index) => {
-                    return (
-                      <ProblemDiv key={index + "meaning"}>
+              {/* 뜻 시험 */}
+              {meanList?.length !== 0 &&
+                meanList
+                  ?.filter((pageMeanList) => pageMeanList.id === page)
+                  .map((itemList) =>
+                    itemList.list.map((item) => (
+                      <ProblemDiv key={item.id + "" + item.day}>
                         <ProblemLeft>
-                          <ProblemNum>
-                            {count + 1 > category.mean + category.word
-                              ? (count = 1)
-                              : ++count}
-                            .
-                          </ProblemNum>
+                          <ProblemNum>{initializeCount(true)}.</ProblemNum>
                           <Problem>{item.word}</Problem>
                         </ProblemLeft>
                         <ProblemLine>
                           &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
                         </ProblemLine>
                       </ProblemDiv>
-                    );
-                  })
-                : null}
-
-              {category.word !== 0
-                ? getCurrentList(wordList, page).map((item, index) => {
-                    return (
-                      <ProblemDiv key={index + "word"}>
+                    ))
+                  )}
+              {/* 단어 시험 */}
+              {wordList?.length !== 0 &&
+                wordList
+                  ?.filter((pageWordList) => pageWordList.id === page)
+                  .map((itemList) =>
+                    itemList.list.map((item) => (
+                      <ProblemDiv key={item.id + "" + item.day}>
                         <ProblemLeft>
-                          <ProblemNum>
-                            {count + 1 > category.mean + category.word
-                              ? (count = 1)
-                              : ++count}
-                            .
-                          </ProblemNum>
+                          <ProblemNum>{count++}.</ProblemNum>
                           <Problem>{item.meaning}</Problem>
                         </ProblemLeft>
                         <ProblemLine>
                           &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;
                         </ProblemLine>
                       </ProblemDiv>
-                    );
-                  })
-                : null}
+                    ))
+                  )}
             </PageProblem>
           </PageContainer>
-          <PageAnswerContainer key={page + "answer"}>
+          <PageAnswerContainer>
             <PageHeader>
               <PageTitle>단어 테스트 {page + 1} 답지</PageTitle>
             </PageHeader>
             <PageProblem>
-              {category.mean !== 0
-                ? getCurrentList(meanList, page)?.map((item, index) => {
-                    return (
-                      <ProblemDiv key={index + "meaningAnswer"}>
+              {/* 뜻 답지 */}
+              {meanList?.length !== 0 &&
+                meanList
+                  ?.filter((pageMeanList) => pageMeanList.id === page)
+                  .map((itemList) =>
+                    itemList.list.map((item) => (
+                      <ProblemDiv key={item.id + "" + item.day}>
                         <ProblemLeft>
-                          <ProblemNum>
-                            {count + 1 > category.mean + category.word
-                              ? (count = 1)
-                              : ++count}
-                            .
-                          </ProblemNum>
+                          <ProblemNum>{initializeCount(false)}.</ProblemNum>
                           <Problem>{item.meaning}</Problem>
                         </ProblemLeft>
                         <ProblemLine></ProblemLine>
                       </ProblemDiv>
-                    );
-                  })
-                : null}
-
-              {category.word !== 0
-                ? getCurrentList(wordList, page).map((item, index) => {
-                    return (
-                      <ProblemDiv key={index + "wordAnswer"}>
+                    ))
+                  )}
+              {wordList?.length !== 0 &&
+                wordList
+                  ?.filter((pageWordList) => pageWordList.id === page)
+                  .map((itemList) =>
+                    itemList.list.map((item) => (
+                      <ProblemDiv key={item.id + "" + item.day}>
                         <ProblemLeft>
-                          <ProblemNum>
-                            {count + 1 > category.mean + category.word
-                              ? (count = 1)
-                              : ++count}
-                            .
-                          </ProblemNum>
+                          <ProblemNum>{count++}.</ProblemNum>
                           <Problem>{item.word}</Problem>
                         </ProblemLeft>
                         <ProblemLine></ProblemLine>
                       </ProblemDiv>
-                    );
-                  })
-                : null}
+                    ))
+                  )}
             </PageProblem>
           </PageAnswerContainer>
         </div>
@@ -196,4 +189,4 @@ const WordPage = ({ meanList, wordList, currentPage, forPrintRef }) => {
   );
 };
 
-export default WordPage;
+export default UserWords;

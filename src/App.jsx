@@ -5,14 +5,13 @@ import Layout from "./components/Layout.jsx";
 import Home from "./router/Home.jsx";
 import Profile from "./router/Profile.jsx";
 import Word from "./router/Word.jsx";
-import Upload from "./router/Upload.jsx";
 import Login from "./router/Login.jsx";
 import CreateAccount from "./router/CreateAccount.jsx";
-import UserWord from "./router/UserWord.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 import { useEffect } from "react";
-import Edit from "./router/Edit.jsx";
+import { addDoc, collection } from "firebase/firestore";
+import { wordList } from "./voca/voca.js";
 
 const Page = styled.div`
   background-color: #7f8fa6;
@@ -55,18 +54,6 @@ const router = createBrowserRouter([
         path: "word",
         element: <Word />,
       },
-      {
-        path: "upload",
-        element: <Upload />,
-      },
-      {
-        path: "edit",
-        element: <Edit />,
-      },
-      {
-        path: "user/:uid",
-        element: <UserWord />,
-      },
     ],
   },
   {
@@ -90,6 +77,24 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+const saveWordListToFirestore = async () => {
+  const documentData = {
+    title: "vocaTest",
+    vocaId: "test",
+    language: "english",
+    wordList: wordList,
+  };
+
+  try {
+    const docRef = await addDoc(collection(db, "voca"), documentData);
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+//saveWordListToFirestore();
 
 function App() {
   const init = async () => {

@@ -1,10 +1,9 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   categoryState,
-  dbWordList,
   sectionState,
+  selectedWordListState,
   testState,
-  userState,
 } from "../atoms";
 import styled from "styled-components";
 import Button from "./elements/Button";
@@ -139,7 +138,7 @@ const ListSec = () => {
   const [currentSection, setCurrentSection] = useRecoilState(sectionState);
   const category = useRecoilValue(categoryState);
   const [currentPage, setCurrentPage] = useState(1);
-  const dbList = useRecoilValue(dbWordList);
+  const selectedWordList = useRecoilValue(selectedWordListState);
   const [meanList, setMeanList] = useState([]);
   const [wordList, setWordList] = useState([]);
   const setTest = useSetRecoilState(testState);
@@ -149,7 +148,7 @@ const ListSec = () => {
   const componentRef = useRef();
 
   useEffect(() => {
-    if (dbList.length === 0) {
+    if (selectedWordList.length === 0) {
       return;
     }
 
@@ -164,7 +163,7 @@ const ListSec = () => {
     for (let page = 0; page < category.page; page++) {
       const tempObject = {
         id: page,
-        list: getRandomWords(dbList, category.mean + category.word),
+        list: getRandomWords(selectedWordList, category.mean + category.word),
       };
       totalList.push(tempObject);
     }
@@ -173,6 +172,7 @@ const ListSec = () => {
     const wordTempList = [];
 
     totalList.forEach((item) => {
+      console.log("listsec totallist", item);
       // id를 그대로 가져오고, list를 분할하여 새로운 배열에 추가
       meanTempList.push({
         id: item.id,
@@ -183,7 +183,7 @@ const ListSec = () => {
 
     setMeanList(meanTempList);
     setWordList(wordTempList);
-  }, [dbList, category, setMeanList, setWordList, currentSection]);
+  }, [selectedWordList, category, setMeanList, setWordList, currentSection]);
 
   const pageInc = () => {
     if (currentPage + 1 > category.page) return;
@@ -199,9 +199,8 @@ const ListSec = () => {
     setCurrentSection("SELECT");
   };
 
-  // select 태그의 onChange 이벤트 핸들러
   const handleSelectChange = (event) => {
-    setCurrentPage(event.target.value); // 선택된 값 업데이트
+    setCurrentPage(event.target.value);
   };
 
   const renderOptions = (count) => {
@@ -221,7 +220,7 @@ const ListSec = () => {
   };
 
   const savePage = async () => {
-    setTest({ meanList, wordList, currentPage: category.page });
+    //setTest({ meanList, wordList, currentPage: category.page });
     const localUser = JSON.parse(localStorage.getItem("user"));
     const fetchUser = async () => {
       const userQuery = query(
@@ -230,7 +229,7 @@ const ListSec = () => {
       );
       const snapshot = await getDocs(userQuery);
       snapshot.forEach(async (doc) => {
-        const userRef = doc.ref; // 문서의 참조를 직접 사용합니다.
+        const userRef = doc.ref;
         await updateDoc(userRef, {
           myWordList: {
             meanList,
@@ -247,6 +246,7 @@ const ListSec = () => {
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     documentTitle: "Voca Test",
+    removeAfterPrint: true,
   });
 
   return (

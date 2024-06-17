@@ -1,11 +1,16 @@
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { categoryState, dbWordList, numberState, sectionState } from "../atoms";
+import {
+  categoryState,
+  dbWordListState,
+  numberState,
+  sectionState,
+  selectedWordListState,
+} from "../atoms";
 import Button from "./elements/Button";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { generateTotalList } from "../utils/randomSelect";
-import { wordList } from "../voca/voca";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -157,10 +162,11 @@ const SelectSec = () => {
   const [error, setError] = useState("");
   const setCategory = useSetRecoilState(categoryState);
   const number = useRecoilValue(numberState);
-  const setDbWordList = useSetRecoilState(dbWordList);
+  const setSelectedWordList = useSetRecoilState(selectedWordListState);
+  const dbWordList = useRecoilValue(dbWordListState);
 
-  const MAX = number.length * 10;
   const PAGE_MAX = 100;
+  const MAX = number.length * 10;
 
   const onValid = (data) => {
     const mean = data.mean ? +data.mean : 0;
@@ -184,12 +190,10 @@ const SelectSec = () => {
 
     setCurrentSection("LIST");
     setError("");
-    //db통신
-    //결과를 set함수에 넣기
 
-    const combinedWordList = generateTotalList(wordList, number);
+    const combinedWordList = generateTotalList(dbWordList, number);
 
-    setDbWordList(combinedWordList);
+    setSelectedWordList(combinedWordList);
   };
 
   const prevSection = (event) => {
