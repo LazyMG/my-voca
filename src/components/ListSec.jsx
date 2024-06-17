@@ -1,10 +1,5 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  categoryState,
-  sectionState,
-  selectedWordListState,
-  testState,
-} from "../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { categoryState, sectionState, selectedWordListState } from "../atoms";
 import styled from "styled-components";
 import Button from "./elements/Button";
 import WordHeader from "./Word/WordHeader";
@@ -141,7 +136,6 @@ const ListSec = () => {
   const selectedWordList = useRecoilValue(selectedWordListState);
   const [meanList, setMeanList] = useState([]);
   const [wordList, setWordList] = useState([]);
-  const setTest = useSetRecoilState(testState);
 
   let rowCount = 1;
 
@@ -220,7 +214,10 @@ const ListSec = () => {
   };
 
   const savePage = async () => {
-    //setTest({ meanList, wordList, currentPage: category.page });
+    if (!localStorage.getItem("user")) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
     const localUser = JSON.parse(localStorage.getItem("user"));
     const fetchUser = async () => {
       const userQuery = query(

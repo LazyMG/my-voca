@@ -36,6 +36,29 @@ const Content = styled.div`
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+
+      {
+        path: "word",
+        element: <Word />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "create-account",
+        element: <CreateAccount />,
+      },
+    ],
+  },
+  {
+    path: "/profile",
     element: (
       <ProtectedRoute>
         <Layout />
@@ -44,35 +67,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />,
-      },
-      {
-        path: "profile",
         element: <Profile />,
-      },
-      {
-        path: "word",
-        element: <Word />,
-      },
-    ],
-  },
-  {
-    path: "/login",
-    element: <Layout />,
-    children: [
-      {
-        path: "",
-        element: <Login />,
-      },
-    ],
-  },
-  {
-    path: "/create-account",
-    element: <Layout />,
-    children: [
-      {
-        path: "",
-        element: <CreateAccount />,
       },
     ],
   },
