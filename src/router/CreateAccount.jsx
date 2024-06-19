@@ -4,7 +4,9 @@ import styled from "styled-components";
 import Button from "../components/elements/Button";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import reset from "styled-reset";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -139,17 +141,51 @@ const CreateAccount = () => {
     register,
     handleSubmit,
     setError,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm();
+  const [isEmailChecked, setEmailChecked] = useState(false);
+  const [emailInput, setEmailInput] = useState("");
 
-  const emailConfirm = (event) => {
+  const isExistEmail = async () => {
+    const email = emailInput || getValues("email");
+    const userQuery = query(
+      collection(db, "users"),
+      where("email", "==", email)
+    );
+    const snapshot = await getDocs(userQuery);
+    const userDoc = snapshot.docs[0];
+    if (userDoc) return true;
+    else return false;
+  };
+
+  const emailConfirm = async (event) => {
     event.preventDefault();
+    const result = await isExistEmail();
     //email 체크
+    if (result) {
+      alert("이미 존재하는 이메일입니다.");
+      setValue("email", "");
+      setEmailInput("");
+
+      return;
+    } else {
+      alert("사용가능한 이메일입니다.");
+      setEmailChecked(true);
+    }
   };
 
   const onValid = async (data) => {
     const { email, password, passwordConfirm, username } = data;
     //email 체크
+    //console.log(isEmailChecked);
+
+    if (!isEmailChecked) {
+      alert("이메일 확인이 필요합니다.");
+      return;
+    }
+
     if (password !== passwordConfirm) {
       setError("passwordConfirm", { message: "비밀번호가 일치하지 않습니다." });
       return;
@@ -180,6 +216,11 @@ const CreateAccount = () => {
     }
   };
 
+  const changeEmailInput = (event) => {
+    setEmailInput(event.target.value);
+    setEmailChecked(false);
+  };
+
   return (
     <Wrapper>
       <Container>
@@ -198,6 +239,8 @@ const CreateAccount = () => {
                   })}
                   type="email"
                   placeholder="Email"
+                  value={emailInput}
+                  onChange={changeEmailInput}
                 />
                 <Button onClick={emailConfirm} text="Check" size={"S"} />
               </EmailDiv>
@@ -247,7 +290,7 @@ const CreateAccount = () => {
                   type="password"
                   placeholder="Password Confirm"
                 />
-                <ErrorSpan>{errors?.passwordConfirm?.message}dsda</ErrorSpan>
+                <ErrorSpan>{errors?.passwordConfirm?.message}</ErrorSpan>
               </TextDiv>
 
               <ButtonDiv>
