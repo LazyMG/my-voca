@@ -131,14 +131,23 @@ const Login = () => {
 
   const onValid = async (data) => {
     const { email, password } = data;
-    console.log(email, password);
+    //console.log(email, password);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+
       setLogin({
         isLogin: true,
         isLoading: true,
       });
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+        })
+      );
       navigate("/");
     } catch (error) {
       setError("password", { message: error.message });
