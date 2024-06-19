@@ -1,13 +1,21 @@
 import styled from "styled-components";
 import Button from "../components/elements/Button";
 import { useEffect, useRef, useState } from "react";
-import { db } from "../firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { db, storage } from "../firebase";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useRecoilState } from "recoil";
 import { testState, userState } from "../atoms";
 import { useForm } from "react-hook-form";
 import { useReactToPrint } from "react-to-print";
 import UserWords from "../components/Word/UserWords";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -30,78 +38,72 @@ const Header = styled.h1`
   display: flex;
   justify-content: center;
   align-items: end;
-  //background-color: green;
 `;
 
 const Title = styled.div`
-  //background-color: green;
   width: 30%;
   display: flex;
   gap: 10px;
+  position: relative;
 `;
 
-const ProfilePhoto = styled.img`
-  width: 100px;
-  height: 100px;
+const ProfilePhoto = styled.div`
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  background-color: black;
+  background-color: #e8e8e8;
+  background: ${({ $imgUrl }) => ($imgUrl ? `url(${$imgUrl})` : null)};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 const ProfileDiv = styled.div`
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  //background-color: yellow;
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const ProfileName = styled.div`
-  font-size: 30px;
+  font-size: 33px;
   font-weight: bold;
 `;
 
-const ProfileText = styled.div``;
+const ProfileText = styled.div`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`;
 
 const Content = styled.div`
-  padding-inline: 200px;
+  padding-inline: 150px;
   padding-top: 60px;
   padding-bottom: 80px;
-  //background-color: blue;
 `;
 
 const EditDiv = styled.div`
-  //background-color: red;
   width: 100%;
   height: 100%;
   padding: 20px;
-  border: 1px solid black;
   border-radius: 15px;
 `;
 
 const Form = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 30px;
-  grid-template-rows: 1.5fr 0.5fr;
   height: 100%;
 `;
 
 const FormContent = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  //background-color: red;
-`;
-
-const LeftFormContent = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-`;
-
-const RightFormContent = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  gap: 20px;
 `;
 
 const TextBox = styled.input`
@@ -139,14 +141,15 @@ const TextBox = styled.input`
   }
 `;
 
-const TextArea = styled.textarea`
+const TextArea = styled.input`
   border: 2px solid white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 20px;
   font-size: 16px;
-  color: white;
+  color: black;
+  background-color: #ededed;
+  border-color: #ededed;
   width: 100%;
-  height: 100%;
   resize: none;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -165,16 +168,25 @@ const TextArea = styled.textarea`
 `;
 
 const AttachFileButton = styled.label`
+  position: absolute;
+  bottom: -40px;
+  left: 15px;
   width: fit-content;
   height: fit-content;
-  padding: 10px 0px;
-  color: black;
+  padding: 10px 15px;
+  color: white;
   text-align: center;
   border-radius: 20px;
-  border: 2px solid black;
+  border: 1px solid black;
   font-size: 14px;
   font-weight: 600;
+
+  background-color: black;
   cursor: pointer;
+
+  &:hover {
+    opacity: 0.6;
+  }
 `;
 
 const AttachFileInput = styled.input`
@@ -182,18 +194,11 @@ const AttachFileInput = styled.input`
 `;
 
 const FormSubmitDiv = styled.div`
-  //background-color: blue;
-  display: flex;
-  justify-content: end;
-  align-items: flex-end;
-`;
-
-const ButtonDiv = styled.div`
-  //background-color: blue;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   align-items: center;
+  justify-content: center;
 `;
 
 const PrintDiv = styled.div`
@@ -205,10 +210,13 @@ const Profile = () => {
   const [user, setUser] = useRecoilState(userState);
   const [isLoading, setIsLoading] = useState(true);
   const [file, setFile] = useState();
+  const [photoURL, setPhotoURL] = useState("");
+  const [isFileUploading, setIsFileUploading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
   const [testData, setTestData] = useRecoilState(testState);
 
@@ -221,23 +229,33 @@ const Profile = () => {
         where("userId", "==", localUser?.uid)
       );
       const snapshot = await getDocs(userQuery);
+      const userDoc = snapshot.docs[0];
       const dbUser = snapshot.docs.map((doc) => {
-        const { userId, username, photo, introduce, myWordList } = doc.data();
-        return {
+        const {
           userId,
           username,
-          photo,
+          photoURL,
+          introduce,
+          myWordList,
+        } = doc.data();
+        return {
+          docId: userDoc.id,
+          userId,
+          username,
+          photoURL,
           introduce,
           myWordList,
         };
       });
-      //console.log("dbUser", dbUser[0].myWordList);
       setUser(...dbUser);
+      setPhotoURL(dbUser[0].photoURL);
       setTestData({
         meanList: dbUser[0].myWordList.meanList,
         wordList: dbUser[0].myWordList.wordList,
         currentPage: dbUser[0].myWordList.currentPage,
       });
+      setValue("username", dbUser[0]?.username);
+      setValue("introduce", dbUser[0]?.introduce);
     };
     fetchUser();
     setIsLoading(false);
@@ -249,12 +267,41 @@ const Profile = () => {
     }
   }, [testData]);
 
-  const editProfile = (event) => {
-    event.preventDefault();
+  const onValid = async (data) => {
+    const userDocRef = doc(db, "users", user.docId);
+
+    let updateData = {
+      username: data.username || user.username,
+      introduce: data.introduce,
+    };
+
+    if (file) {
+      const locationRef = ref(storage, `avatars/${user?.userId}`);
+      const result = await uploadBytes(locationRef, file);
+      const avatarUrl = await getDownloadURL(result.ref);
+      updateData.photoURL = avatarUrl;
+    }
+
+    await updateDoc(userDocRef, updateData);
+
+    setUser((prev) => ({
+      ...prev,
+      ...updateData,
+    }));
   };
 
-  const onValid = (data) => {
-    console.log(data);
+  const changePhotoFile = async (event) => {
+    const { files } = event.target;
+    if (files && files.length === 1) {
+      setIsFileUploading(true);
+      const userFile = files[0];
+      const locationRef = ref(storage, `avatars/${user?.userId}temp`);
+      const result = await uploadBytes(locationRef, userFile);
+      const avatarUrl = await getDownloadURL(result.ref);
+      setPhotoURL(avatarUrl);
+      setFile(userFile);
+      setIsFileUploading(false);
+    }
   };
 
   const printPage = () => {
@@ -273,44 +320,46 @@ const Profile = () => {
       <Container>
         <Header>
           <Title>
-            <ProfilePhoto />
+            <ProfilePhoto $imgUrl={photoURL} />
             <ProfileDiv>
-              <ProfileName>{user?.username}</ProfileName>
+              <ProfileName>{localUser?.username || user?.username}</ProfileName>
               <ProfileText>{user?.introduce}</ProfileText>
             </ProfileDiv>
+            <AttachFileButton htmlFor="file">
+              {isFileUploading ? "Uploading.." : "Edit photo"}
+            </AttachFileButton>
+            <AttachFileInput
+              onChange={changePhotoFile}
+              type="file"
+              id="file"
+              accept="image/*"
+            />
           </Title>
         </Header>
         <Content>
           <EditDiv>
-            <Form onSubmit={handleSubmit(onValid)}>
+            <Form>
               <FormContent>
-                <LeftFormContent>
-                  <AttachFileButton htmlFor="file">Add photo</AttachFileButton>
-                  <AttachFileInput type="file" id="file" accept="image/*" />
-                  <TextBox
-                    {...register("username")}
-                    placeholder={user?.username}
-                  />
-                </LeftFormContent>
-                <RightFormContent>
-                  <TextArea
-                    {...register("introduce")}
-                    rows={5}
-                    maxLength={180}
-                    placeholder="What is happening?!"
-                    required
-                  />
-                </RightFormContent>
+                <TextArea
+                  {...register("username", { required: true })}
+                  placeholder="닉네임을 수정해요!"
+                  type="text"
+                />
+                <TextArea
+                  {...register("introduce", {
+                    maxLength: 40,
+                  })}
+                  placeholder="소개말을 수정해요!"
+                  type="text"
+                />
               </FormContent>
               <FormSubmitDiv>
-                <Button onClick={editProfile} text="수정" />
+                <Button onClick={handleSubmit(onValid)} text="수정" />
+                <Button isPrint={true} onClick={printPage} text="View Test" />
               </FormSubmitDiv>
             </Form>
           </EditDiv>
         </Content>
-        <ButtonDiv>
-          <Button onClick={printPage} text="View Test" />
-        </ButtonDiv>
       </Container>
       {!isLoading ? (
         <PrintDiv>

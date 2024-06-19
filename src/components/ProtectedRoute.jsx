@@ -18,6 +18,7 @@ const ProtectedRoute = ({ children }) => {
             uid: user.uid,
             displayName: user.displayName,
             email: user.email,
+            photo: user.photoURL,
           })
         );
         setLogin((prev) => ({

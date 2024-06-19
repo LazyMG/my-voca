@@ -172,6 +172,7 @@ const CreateAccount = () => {
         userId: credentials.user.uid,
         introduce: "Hello!",
         wordList: {},
+        photoURL: "",
       });
       navigate("/login");
     } catch (error) {

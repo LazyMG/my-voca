@@ -135,7 +135,6 @@ const Login = () => {
 
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-
       setLogin({
         isLogin: true,
         isLoading: true,
@@ -146,6 +145,7 @@ const Login = () => {
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
+          photo: user.photoURL,
         })
       );
       navigate("/");
