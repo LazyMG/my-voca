@@ -224,39 +224,44 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userQuery = query(
-        collection(db, "users"),
-        where("userId", "==", localUser?.uid)
-      );
-      const snapshot = await getDocs(userQuery);
-      const userDoc = snapshot.docs[0];
-      const dbUser = snapshot.docs.map((doc) => {
-        const {
-          userId,
-          username,
-          photoURL,
-          introduce,
-          myWordList,
-        } = doc.data();
-        return {
-          docId: userDoc.id,
-          userId,
-          username,
-          photoURL,
-          introduce,
-          myWordList,
-        };
-      });
-      setUser(...dbUser);
-      setPhotoURL(dbUser[0].photoURL);
-      setTestData({
-        meanList: dbUser[0].myWordList.meanList,
-        wordList: dbUser[0].myWordList.wordList,
-        currentPage: dbUser[0].myWordList.currentPage,
-      });
-      setValue("username", dbUser[0]?.username);
-      setValue("introduce", dbUser[0]?.introduce);
+      try {
+        const userQuery = query(
+          collection(db, "users"),
+          where("userId", "==", localUser?.uid)
+        );
+        const snapshot = await getDocs(userQuery);
+        const userDoc = snapshot.docs[0];
+        const dbUser = snapshot.docs.map((doc) => {
+          const {
+            userId,
+            username,
+            photoURL,
+            introduce,
+            myWordList,
+          } = doc.data();
+          return {
+            docId: userDoc.id,
+            userId,
+            username,
+            photoURL,
+            introduce,
+            myWordList,
+          };
+        });
+        setUser(...dbUser);
+        setPhotoURL(dbUser[0].photoURL);
+        setTestData({
+          meanList: dbUser[0].myWordList.meanList,
+          wordList: dbUser[0].myWordList.wordList,
+          currentPage: dbUser[0].myWordList.currentPage,
+        });
+        setValue("username", dbUser[0]?.username);
+        setValue("introduce", dbUser[0]?.introduce);
+      } catch (error) {
+        //
+      }
     };
+
     fetchUser();
     setIsLoading(false);
   }, []);

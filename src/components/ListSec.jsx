@@ -166,7 +166,7 @@ const ListSec = () => {
     const wordTempList = [];
 
     totalList.forEach((item) => {
-      console.log("listsec totallist", item);
+      // console.log("listsec totallist", item);
       // id를 그대로 가져오고, list를 분할하여 새로운 배열에 추가
       meanTempList.push({
         id: item.id,
@@ -220,22 +220,28 @@ const ListSec = () => {
     }
     const localUser = JSON.parse(localStorage.getItem("user"));
     const fetchUser = async () => {
-      const userQuery = query(
-        collection(db, "users"),
-        where("userId", "==", localUser?.uid)
-      );
-      const snapshot = await getDocs(userQuery);
-      snapshot.forEach(async (doc) => {
-        const userRef = doc.ref;
-        await updateDoc(userRef, {
-          myWordList: {
-            meanList,
-            wordList,
-            currentPage: category.page,
-          },
+      try {
+        const userQuery = query(
+          collection(db, "users"),
+          where("userId", "==", localUser?.uid)
+        );
+        const snapshot = await getDocs(userQuery);
+        snapshot.forEach(async (doc) => {
+          const userRef = doc.ref;
+          await updateDoc(userRef, {
+            myWordList: {
+              meanList,
+              wordList,
+              currentPage: category.page,
+            },
+          });
         });
-      });
+      } catch (error) {
+        alert("저장에 실패했습니다.");
+      }
+
       // console.log("complete");
+      alert("저장되었습니다.");
     };
     fetchUser();
   };

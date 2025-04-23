@@ -62,6 +62,7 @@ const Form = styled.form`
 
 const TextDiv = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const TextBox = styled.input`
@@ -100,7 +101,8 @@ const TextBox = styled.input`
 `;
 
 const ErrorSpan = styled.span`
-  font-size: 16px;
+  margin-top: 5px;
+  font-size: 14px;
   color: red;
 `;
 
@@ -150,7 +152,8 @@ const Login = () => {
       );
       navigate("/");
     } catch (error) {
-      setError("password", { message: error.message });
+      console.log("error");
+      setError("password", { message: "로그인 정보가 틀립니다." });
       // console.log(error);
     }
   };
@@ -175,7 +178,6 @@ const Login = () => {
                   placeholder="Email"
                   required
                 />
-                <ErrorSpan></ErrorSpan>
               </TextDiv>
               <TextDiv>
                 <TextBox
@@ -188,7 +190,9 @@ const Login = () => {
                   placeholder="Password"
                   required
                 />
-                <ErrorSpan></ErrorSpan>
+                {errors.password && (
+                  <ErrorSpan>{errors.password.message}</ErrorSpan>
+                )}
               </TextDiv>
 
               <ButtonDiv>
