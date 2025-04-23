@@ -5,8 +5,7 @@ import Button from "../components/elements/Button";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import reset from "styled-reset";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   width: 100%;

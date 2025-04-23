@@ -151,7 +151,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       setError("password", { message: error.message });
-      console.log(error);
+      // console.log(error);
     }
   };
 

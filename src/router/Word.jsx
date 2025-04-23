@@ -22,7 +22,7 @@ const Word = () => {
         wordList,
       };
     });
-    console.log("dbWord", dbWord[0].wordList);
+    // console.log("dbWord", dbWord[0].wordList);
     setDBWordList(dbWord[0].wordList);
   }, [setDBWordList]);
 

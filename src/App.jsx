@@ -83,9 +83,9 @@ const saveWordListToFirestore = async () => {
 
   try {
     const docRef = await addDoc(collection(db, "voca"), documentData);
-    console.log("Document written with ID: ", docRef.id);
+    // console.log("Document written with ID: ", docRef.id);
   } catch (e) {
-    console.error("Error adding document: ", e);
+    // console.error("Error adding document: ", e);
   }
 };
 

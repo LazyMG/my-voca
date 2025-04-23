@@ -59,7 +59,7 @@ const Layout = () => {
   const [login, setLogin] = useRecoilState(loginState);
 
   useEffect(() => {
-    console.log("user", user);
+    // console.log("user", user);
     if (user) {
       setLogin({
         isLogin: true,

@@ -83,12 +83,12 @@ const WordPage = ({ meanList, wordList, currentPage, forPrintRef }) => {
   let count = 0;
   let totalPage = category.page || currentPage || 1;
 
-  useEffect(() => {
-    console.log(meanList);
-    console.log(wordList);
-    console.log(currentPage);
-    console.log(category);
-  }, [meanList, wordList, currentPage, category]);
+  // useEffect(() => {
+  //   console.log(meanList);
+  //   console.log(wordList);
+  //   console.log(currentPage);
+  //   console.log(category);
+  // }, [meanList, wordList, currentPage, category]);
 
   return (
     <Wrapper ref={forPrintRef}>
