@@ -1,24 +1,28 @@
-# 단어 시험지 생성 프로젝트
+# 단어 시험지 도우미
 
-본 프로젝트는 단어 시험지 생성 프로젝트로, Firebase를 사용하여 로그인, DB, 배포 기능을 구현하였습니다.
+본 프로젝트는 단어 시험지를 간편하게 생성하고 출력할 수 있는 웹 애플리케이션입니다.
+Firebase를 활용하여 **사용자 인증, 데이터 저장, 배포** 기능을 구현하였습니다.
 
 ### 프로젝트 소개
 
 프로젝트에 사용된 스킬입니다.
 <br/>
 
-![firebase](https://img.shields.io/badge/Firebase-DD2C00.svg?style=for-the-badge&logo=Firebase&logoColor=white)
 ![react](https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black)
-![react-hook-form](https://img.shields.io/badge/React%20Hook%20Form-EC5990.svg?style=for-the-badge&logo=React-Hook-Form&logoColor=white)
 ![recoil](https://img.shields.io/badge/Recoil-3578E5.svg?style=for-the-badge&logo=Recoil&logoColor=white)
 ![styled-components](https://img.shields.io/badge/styledcomponents-DB7093.svg?style=for-the-badge&logo=styled-components&logoColor=white)
 ![react-router](https://img.shields.io/badge/React%20Router-CA4245.svg?style=for-the-badge&logo=React-Router&logoColor=white)
+![firebase](https://img.shields.io/badge/Firebase-DD2C00.svg?style=for-the-badge&logo=Firebase&logoColor=white)
+![react-hook-form](https://img.shields.io/badge/React%20Hook%20Form-EC5990.svg?style=for-the-badge&logo=React-Hook-Form&logoColor=white)
 
 <br/>
 
-기존 단어 시험지 생성 웹사이트의 사용자 입력이 불편하다는 의견을 얻어 사용자 친화적인 디자인으로 재구성하였습니다. 계정 생성 및 로그인이 가능하고 DB에 저장되어 있는 데이터들을 바탕으로 단어 시험지를 만들고 출력할 수 있습니다. 로그인 한 사용자는 만들었던 시험지를 저장하여 프로필 창에서 다시 확인이 가능합니다.
+기존 단어 시험지 생성 웹사이트는 사용자 입력이 불편하다는 의견이 있어 사용자 친화적인 디자인으로 재구성하였습니다. 계정 생성 및 로그인이 가능하고 DB에 저장되어 있는 데이터들을 바탕으로 단어 시험지를 만들고 출력할 수 있습니다. 로그인 한 사용자는 만들었던 시험지를 저장하여 프로필 창에서 다시 확인이 가능합니다.
 
 이전에 미완성된 팀 프로젝트의 결과물을 더 확장시켰습니다. 시험지 생성 및 출력 기능까지 있었고 계정 생성 및 로그인, 프로필, 시험지 저장 및 확인 기능을 추가하였습니다.
+
+현재(25년 4월 기준)는 초기 JavaScript 기반에서 벗어나, TypeScript 도입, 폴더 구조 재정비, 상태 관리 라이브러리 변경 등의 리팩토링 방향을 검토 중입니다. 이를 통해 유지보수성과 확장성 향상을 목표로
+지속적인 개선을 계획하고 있습니다.
 <br/>
 
 ### 프로젝트 일정
