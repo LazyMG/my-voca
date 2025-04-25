@@ -266,8 +266,8 @@ const CreateAccount = () => {
                       message: "Password를 입력해주세요.",
                     },
                     minLength: {
-                      value: 6,
-                      message: "Password의 길이는 6자 이상입니다.",
+                      value: 4,
+                      message: "Password의 길이는 4자 이상입니다.",
                     },
                   })}
                   type="password"
@@ -282,8 +282,8 @@ const CreateAccount = () => {
                       message: "Password 확인이 필요합니다.",
                     },
                     minLength: {
-                      value: 6,
-                      message: "Password의 길이는 6자 이상입니다.",
+                      value: 4,
+                      message: "Password의 길이는 4자 이상입니다.",
                     },
                   })}
                   type="password"
