@@ -32,11 +32,15 @@ Firebase를 사용하여 배포하였습니다. DB 또한 Firebase Database를 �
 
 배포 링크 : [https://my-voca-947ab.web.app](https://my-voca-947ab.web.app)
 
+<br/>
+
 ## 주요 기능 소개
 
 기존 단어 시험지 생성 웹사이트는 사용자 입력이 불편하다는 의견이 있어 사용자 친화적인 디자인으로 재구성하였습니다.
 
 계정 생성 및 로그인이 가능하고 DB에 저장되어 있는 데이터들을 바탕으로 단어 시험지를 만들고 출력할 수 있습니다. 로그인 한 사용자는 만들었던 시험지를 저장하여 프로필 창에서 다시 확인이 가능합니다.
+
+<br/>
 
 ## 개발 주요 로드맵
 
@@ -44,3 +48,11 @@ Firebase를 사용하여 배포하였습니다. DB 또한 Firebase Database를 �
 - [x] 나만의 시험지 저장 구현
 - [ ] 타입스크립트 전환
 - [ ] 단어 게임 구현
+
+<br/>
+
+## 개발자
+
+이마가: 프론트엔드 개발 및 배포  
+✉️ 이메일: cbfmark@gmail.com  
+🏠 블로그: [https://velog.io/@cbfmark/posts](https://velog.io/@cbfmark/posts)
