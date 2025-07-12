@@ -69,7 +69,7 @@ const Home = () => {
     <Wrapper>
       <Container>
         <Header>
-          <Title>단어 시험 도우미</Title>
+          <Title>Voca 시험 볼까</Title>
         </Header>
         <Content>
           <Introduction>
